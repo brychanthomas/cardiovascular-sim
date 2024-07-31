@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "ES2017",
+    "module": "es6"
+  },
+  "files": [
+    "src/script.ts"
+  ],
+  "include": [
+    "./types"
+  ]
+}
