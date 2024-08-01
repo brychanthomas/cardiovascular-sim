@@ -58,8 +58,10 @@ export class Graph {
     drawAxes() {
         this.context.strokeStyle = "white";
         this.line(this.basex, this.basey, this.basex, this.basey+this.height);
-        let zeroy = this.valtoy(0);
-        this.line(this.basex, zeroy, this.basex+this.width, zeroy);
+        if (this.minval <= 0) {
+            let zeroy = this.valtoy(0);
+            this.line(this.basex, zeroy, this.basex+this.width, zeroy);
+        }
     }
 
     drawLabels() {
