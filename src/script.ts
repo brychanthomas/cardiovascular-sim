@@ -9,19 +9,33 @@ import {CirculatorySystem} from './CirculatorySystem.js'
 const canvas = <HTMLCanvasElement>document.getElementById("patient1Canvas");
 const ctx = canvas.getContext("2d");
 
-var graph = new Graph(ctx, 50, 10, 500, 200, 5);
+ctx.canvas.width  = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
 
-var h = new Heart();
+var graph = new Graph(ctx, 30, 10, ctx.canvas.width/2 - 60, 200, 5);
+var graph2 = new Graph(ctx, 30, 310, ctx.canvas.width/2 - 60, 200, 5);
 
 var c = new CirculatorySystem();
-var [ts, ps] = c.evaluatePressures();
+c.evaluatePressures();
+var pressures = c.getAorticPressureSequence();
+let flows = c.getAorticValveFlowSequence();
 console.log(c.getPressureString());
 console.log(c.getMAP());
 
-var i = 0;
+var time = 0;
 setInterval(function(){
-    graph.addValue(i/100, ps[i%ps.length]);
+    let [t, p] = pressures.getNextValue();
+    while (t < time) {
+        graph.addValue(t, p);
+        pressures.popNextValue();
+        let [t1, q] = flows.popNextValue();
+        graph2.addValue(t1, q);
+        [t, p] = pressures.getNextValue();
+    }
+    time += 0.05;
     graph.drawValues();
-    i++;
-}, 10);
+    graph2.drawValues();
+}, 50);
+
+
 
