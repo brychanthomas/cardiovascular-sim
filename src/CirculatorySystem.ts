@@ -16,7 +16,9 @@ export class CirculatorySystem {
         let [ts, ps] = this.vasculature.evaluateAorticPressureSequence(this.heart.getFlow.bind(this.heart), timespan, h);
         let T = 60/this.heart.getRate();
         let samplesPerBeat = Math.floor(ps.length*T/timespan)
-        this.aortapressureseq = ps.slice(-samplesPerBeat);
+        ps = ps.slice(-samplesPerBeat);
+        let minidx = ps.indexOf(Math.min(...ps));
+        this.aortapressureseq = ps.slice(minidx).concat(ps.slice(0,minidx));
         this.aortatimeseq = ts.slice(0, samplesPerBeat);
     }
 
