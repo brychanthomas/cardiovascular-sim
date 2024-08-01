@@ -42,17 +42,17 @@ export class Graph {
 
     private timetox(t: number): number {
         var maxt = this.ts[this.ts.length-1];
-        while (this.ts[0] < maxt-this.timespan) {
-            this.ts.splice(0, 1);
-            this.vs.splice(0, 1);
-        }
         return this.basex+1+(this.width-1)*(t-maxt+this.timespan)/this.timespan;
     }
 
     private valtoy(v: number): number {
         var maxv = this.maxval;
         var minv = this.minval;
-        return this.basey+this.height-(this.height)*(v-minv)/(maxv-minv);
+        let y = this.basey+this.height-(this.height)*(v-minv)/(maxv-minv)
+        if (y < this.basey || y > this.basey+this.height) {
+            return this.basey;
+        }
+        return y;
     }
 
     drawAxes() {
@@ -104,6 +104,10 @@ export class Graph {
         } else if (v<this.minval || this.minval === null) {
             this.minval = Math.floor(v/10)*10;
             this.drawLabels();
+        }
+        while (this.ts[0] < t-this.timespan) {
+            this.ts.splice(0, 1);
+            this.vs.splice(0, 1);
         }
     }
 
