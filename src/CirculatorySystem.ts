@@ -11,7 +11,8 @@ export class CirculatorySystem {
 
     evaluatePressures() {
         let timespan = 10;
-        let [ts, ps] = this.vasculature.evaluateAorticPressureSequence(this.heart.getFlow.bind(this.heart), timespan);
+        let h = (60/this.heart.getRate())/100;
+        let [ts, ps] = this.vasculature.evaluateAorticPressureSequence(this.heart.getFlow.bind(this.heart), timespan, h);
         let T = 60/this.heart.getRate();
         let samplesPerBeat = Math.floor(ps.length*T/timespan)
         this.aortapressureseq = ps.slice(-samplesPerBeat);
@@ -26,9 +27,9 @@ export class CirculatorySystem {
         let timeseq = [];
         let flowseq = [];
         let T = 60/this.heart.getRate()
-        for (var t = 0; t<T; t+= 0.01) {
-            timeseq.push(t);
-            flowseq.push(this.heart.getFlow(t));
+        for (var i = 0; i<100; i++) {
+            timeseq.push(i*T/100);
+            flowseq.push(this.heart.getFlow(i*T/100));
         }
         return [timeseq, flowseq];
     }

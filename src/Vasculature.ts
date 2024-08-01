@@ -23,11 +23,10 @@ export class Vasculature {
         return Q(t)/C*(1+R_a/R_p) + R_a*this.d_dt(Q, t) - p/(R_p*C) + this.msfp/(R_p*C);
     }
 
-    evaluateAorticPressureSequence(flowFunc: (t:number)=>number, timespan) {
+    evaluateAorticPressureSequence(flowFunc: (t:number)=>number, timespan, timestep) {
         this.flowFunc = flowFunc;
         let f = this.dp_dt.bind(this);
-        let h = 0.01;
-        let [ts, ps] = NumericalMethods.RungeKutta4(f, timespan, h, 80);
+        let [ts, ps] = NumericalMethods.RungeKutta4(f, timespan, timestep, 80);
         return [ts, ps];
     }
 
