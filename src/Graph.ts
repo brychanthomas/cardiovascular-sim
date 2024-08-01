@@ -48,7 +48,7 @@ export class Graph {
     private valtoy(v: number): number {
         var maxv = this.maxval;
         var minv = this.minval;
-        let y = this.basey+this.height-(this.height)*(v-minv)/(maxv-minv)
+        let y = this.basey+this.height-4-(this.height-4)*(v-minv)/(maxv-minv)
         if (y < this.basey || y > this.basey+this.height) {
             return this.basey;
         }
@@ -115,6 +115,7 @@ export class Graph {
         this.context.clearRect(this.basex, this.basey-1, this.width+1, this.height+2)
         this.drawAxes();
 
+        this.context.lineWidth = 2;
         this.context.strokeStyle = "#99ff99";
         this.context.beginPath();
         this.context.moveTo(this.timetox(this.ts[0]), this.valtoy(this.vs[0]));
@@ -122,6 +123,7 @@ export class Graph {
             this.context.lineTo(this.timetox(this.ts[i]), this.valtoy(this.vs[i]));
         }
         this.context.stroke();
+        this.context.lineWidth = 1;
     }
 
 }
