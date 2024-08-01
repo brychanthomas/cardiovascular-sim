@@ -1,51 +1,45 @@
 import { Heart } from './Heart.js';
-import { NumericalMethods } from './NumericalMethods.js'
+import { Vasculature } from './Vasculature.js';
 
 export class CirculatorySystem {
 
-    heart: Heart = new Heart();
+    private heart: Heart = new Heart();
+    private vasculature: Vasculature = new Vasculature();
 
-    private C_a = 2;
-    private R_a = 0.03;
-    private R_p = 1;
-    private msfp = 7;
-
-    private timeseq;
-    private pressureseq;
-
-    private d_dt(func:(t: number)=>number, t: number) {
-        let epsilon = 1e-6;
-        let delta = func(t+epsilon)-func(t-epsilon);
-        return delta / (2*epsilon);
-    }
-
-    private dp_dt(t, p) {
-        let Q = this.heart.getFlow.bind(this.heart);
-        let C = this.C_a;
-        let R_p = this.R_p;
-        let R_a = this.R_a;
-        return Q(t)/C*(1+R_a/R_p) + R_a*this.d_dt(Q, t) - p/(R_p*C) + this.msfp/(R_p*C);
-    }
+    private aortatimeseq: number[];
+    private aortapressureseq: number[];
 
     evaluatePressures() {
-        let f = this.dp_dt.bind(this);
-        let h = 0.01;
         let timespan = 10;
-        let [ts, ps] = NumericalMethods.RungeKutta4(f, timespan, h, 80);
+        let [ts, ps] = this.vasculature.evaluateAorticPressureSequence(this.heart.getFlow.bind(this.heart), timespan);
         let T = 60/this.heart.getRate();
         let samplesPerBeat = Math.floor(ps.length*T/timespan)
-        this.pressureseq = ps.slice(-samplesPerBeat);
-        this.timeseq = ts.slice(0, samplesPerBeat);
-        return [this.timeseq, this.pressureseq];
+        this.aortapressureseq = ps.slice(-samplesPerBeat);
+        this.aortatimeseq = ts.slice(0, samplesPerBeat);
+    }
+
+    getAorticPressureSequence() {
+        return [this.aortatimeseq, this.aortapressureseq];
+    }
+
+    getAorticValveFlowSequence() {
+        let timeseq = [];
+        let flowseq = [];
+        let T = 60/this.heart.getRate()
+        for (var t = 0; t<T; t+= 0.01) {
+            timeseq.push(t);
+            flowseq.push(this.heart.getFlow(t));
+        }
+        return [timeseq, flowseq];
     }
 
     getPressureString() {
-        let diastolic = Math.round(Math.min(...this.pressureseq));
-        let systolic = Math.round(Math.max(...this.pressureseq));
+        let diastolic = Math.round(Math.min(...this.aortapressureseq));
+        let systolic = Math.round(Math.max(...this.aortapressureseq));
         return systolic+'/'+diastolic;
     }
 
     getMAP() {
-        return this.pressureseq.reduce((a, b) => a + b) / this.pressureseq.length;
+        return this.aortapressureseq.reduce((a, b) => a + b) / this.aortapressureseq.length;
     }
 }
