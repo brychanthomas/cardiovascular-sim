@@ -1,5 +1,6 @@
 import { Heart } from './Heart.js';
 import { Vasculature } from './Vasculature.js';
+import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
 
 export class CirculatorySystem {
 
@@ -20,7 +21,7 @@ export class CirculatorySystem {
     }
 
     getAorticPressureSequence() {
-        return [this.aortatimeseq, this.aortapressureseq];
+        return new RepeatingTimeSequence(this.aortatimeseq, this.aortapressureseq);
     }
 
     getAorticValveFlowSequence() {
@@ -31,7 +32,7 @@ export class CirculatorySystem {
             timeseq.push(i*T/100);
             flowseq.push(this.heart.getFlow(i*T/100));
         }
-        return [timeseq, flowseq];
+        return new RepeatingTimeSequence(timeseq, flowseq);
     }
 
     getPressureString() {
