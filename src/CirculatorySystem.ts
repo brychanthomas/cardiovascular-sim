@@ -46,4 +46,31 @@ export class CirculatorySystem {
     getMAP() {
         return this.aortapressureseq.reduce((a, b) => a + b) / this.aortapressureseq.length;
     }
+
+    setR_pFactor(f: number) {
+        this.vasculature.setR_pFactor(f);
+    }
+
+    setR_aFactor(f: number) {
+        this.vasculature.setR_aFactor(f);
+    }
+
+    setC_aFactor(f: number) {
+        this.vasculature.setC_aFactor(f);
+    }
+
+    setStrokeVolumeFactor() {
+        return 1;
+    }
+
+    setDicroticLengthFactor() {
+        return 1;
+    }
+
+    setDicroticPeakFlowFactor() {
+        return 1;
+    }
+
+    /** TODO */
+    setStressedVolumeFactor() {}
 }

@@ -2,12 +2,18 @@ import { NumericalMethods } from './NumericalMethods.js'
 
 export class Vasculature {
 
-    private C_a = 2;
-    private R_a = 0.03;
-    private R_p = 1;
+    private C_a: number;
+    private R_a: number;
+    private R_p: number;
     private msfp = 7;
 
     private flowFunc: (t:number)=>number;
+
+    constructor() {
+        this.setR_pFactor(1);
+        this.setR_aFactor(1);
+        this.setC_aFactor(1);
+    }
 
     private d_dt(func:(t: number)=>number, t: number) {
         let epsilon = 1e-6;
@@ -28,6 +34,19 @@ export class Vasculature {
         let f = this.dp_dt.bind(this);
         let [ts, ps] = NumericalMethods.RungeKutta4(f, timespan, timestep, 80);
         return [ts, ps];
+    }
+
+    setR_pFactor(f: number) {
+        this.R_p = 1 * f;
+    }
+
+    setR_aFactor(f: number) {
+        this.R_p = 0.03 * f;
+
+    }
+
+    setC_aFactor(f: number) {
+        this.R_p = 2 * f;
     }
 
 }

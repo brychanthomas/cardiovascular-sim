@@ -1,12 +1,18 @@
 export class Heart {
 
-    private rate = 55;
-    private strokeVolume = 90;
-    private systoleLength = 0.3;
-    private dicroticPeakFlow = 100;
-    private dicroticLength = 0.05;
+    private rate: number;
+    private strokeVolume: number;
+    private systoleLength: number;
+    private dicroticPeakFlow: number;
+    private dicroticLength: number;
 
-    constructor() {}
+    constructor() {
+        this.setRateFactor(1);
+        this.setStrokeVolumeFactor(1);
+        this.setSystoleLengthFactor(1);
+        this.setDicroticLengthFactor(1);
+        this.setDicroticPeakFlowFactor(1);
+    }
 
     getFlow(t: number): number {
         let T = 60/this.rate;
@@ -22,5 +28,25 @@ export class Heart {
 
     getRate(): number {
         return this.rate;
+    }
+
+    setStrokeVolumeFactor(f: number) {
+        this.strokeVolume = 90 * f;
+    }
+
+    setDicroticLengthFactor(f: number) {
+        this.dicroticLength = 0.05 * f;
+    }
+
+    setDicroticPeakFlowFactor(f: number) {
+        this.dicroticPeakFlow = 100 * f;
+    }
+
+    setSystoleLengthFactor(f: number) {
+        this.systoleLength = 0.3 * f;
+    }
+
+    setRateFactor(f: number) {
+        this.rate = 50 * f;
     }
 }
