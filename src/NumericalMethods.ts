@@ -1,5 +1,11 @@
 export class NumericalMethods {
 
+    static d_dt(func:(t: number)=>number, t: number) {
+        let epsilon = 1e-6;
+        let delta = func(t+epsilon)-func(t-epsilon);
+        return delta / (2*epsilon);
+    }
+
     static RungeKutta4(f:(y:number, p:number)=>number, timespan:number, h:number, p0: number) {
         //https://jurasic.dev/ode/
         let ps = [p0];

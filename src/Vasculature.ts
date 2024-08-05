@@ -15,18 +15,12 @@ export class Vasculature {
         this.setC_aFactor(1);
     }
 
-    private d_dt(func:(t: number)=>number, t: number) {
-        let epsilon = 1e-6;
-        let delta = func(t+epsilon)-func(t-epsilon);
-        return delta / (2*epsilon);
-    }
-
     private dp_dt(t, p) {
         let Q = this.flowFunc;
         let C = this.C_a;
         let R_p = this.R_p;
         let R_a = this.R_a;
-        return Q(t)/C*(1+R_a/R_p) + R_a*this.d_dt(Q, t) - p/(R_p*C) + this.msfp/(R_p*C);
+        return Q(t)/C*(1+R_a/R_p) + R_a*NumericalMethods.d_dt(Q, t) - p/(R_p*C) + this.msfp/(R_p*C);
     }
 
     evaluateAorticPressureSequence(flowFunc: (t:number)=>number, timespan, timestep) {
@@ -41,12 +35,11 @@ export class Vasculature {
     }
 
     setR_aFactor(f: number) {
-        this.R_p = 0.03 * f;
-
+        this.R_a = 0.03 * f;
     }
 
     setC_aFactor(f: number) {
-        this.R_p = 2 * f;
+        this.C_a = 2 * f;
     }
 
 }
