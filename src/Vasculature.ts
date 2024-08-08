@@ -2,9 +2,9 @@ import { NumericalMethods } from './NumericalMethods.js'
 
 export class Vasculature {
 
-    private C_a: number;
-    private R_a: number;
-    private R_p: number;
+    private C_a: number; // mL / mmHg
+    private R_a: number; // mmHg s / mL
+    private R_p: number; // mmHg s / mL
     private msfp = 7;
 
     private flowFunc: (t:number)=>number;
@@ -39,7 +39,7 @@ export class Vasculature {
     }
 
     setC_aFactor(f: number) {
-        this.C_a = 2 * f;
+        this.C_a = 2.2 * f;
     }
 
 }
