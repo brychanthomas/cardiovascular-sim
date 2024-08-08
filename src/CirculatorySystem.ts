@@ -59,16 +59,24 @@ export class CirculatorySystem {
         this.vasculature.setC_aFactor(f);
     }
 
-    setStrokeVolumeFactor() {
-        return 1;
+    setStrokeVolumeFactor(f: number) {
+        this.heart.setStrokeVolumeFactor(f);
     }
 
-    setDicroticLengthFactor() {
-        return 1;
+    setDicroticLengthFactor(f: number) {
+        this.heart.setDicroticLengthFactor(f);
     }
 
-    setDicroticPeakFlowFactor() {
-        return 1;
+    setDicroticPeakFlowFactor(f: number) {
+        this.heart.setDicroticPeakFlowFactor(f);
+    }
+
+    setRateFactor(f: number) {
+        this.heart.setRateFactor(f);
+    }
+
+    setSystoleLengthFactor(f: number) {
+        this.heart.setSystoleLengthFactor(f);
     }
 
     /** TODO */
