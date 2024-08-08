@@ -31,7 +31,7 @@ export class Heart {
     }
 
     setStrokeVolumeFactor(f: number) {
-        this.strokeVolume = 95 * f;
+        this.strokeVolume = Math.min(95 * f, 125);
     }
 
     setDicroticLengthFactor(f: number) {
