@@ -1,6 +1,6 @@
 import {Heart} from './Heart.js';
 import {Graph} from './Graph.js';
-import {CirculatorySystem} from './CirculatorySystem.js'
+import {Patient} from './Patient.js'
 
 //console.log(math.solveODE());
 
@@ -12,29 +12,31 @@ const ctx = canvas.getContext("2d");
 ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
-var graph = new Graph(ctx, 30, 10, ctx.canvas.width/2 - 60, 200, 5);
-var graph2 = new Graph(ctx, 30, 310, ctx.canvas.width/2 - 60, 200, 5);
+var graph = new Graph(ctx, 60, 10, ctx.canvas.width/2 - 60, 200, 20);
+var graph2 = new Graph(ctx, 60, 310, ctx.canvas.width/2 - 60, 200, 20);
 
-var c = new CirculatorySystem();
-c.evaluatePressures();
-var pressures = c.getAorticPressureSequence();
-let flows = c.getAorticValveFlowSequence();
-console.log(c.getPressureString());
-console.log(c.getMAP());
+var p = new Patient();
+p.computeSteadyState();
+var pressures = p.getAorticPressureSequence();
+let flows = p.getAorticValveFlowSequence();
+console.log(p.getPressureString());
+console.log(p.getMAP());
 
 var time = 0;
 setInterval(function(){
-    let [t, p] = pressures.getNextValue();
-    while (t < time) {
-        graph.addValue(t, p);
-        pressures.popNextValue();
-        let [t1, q] = flows.popNextValue();
-        graph2.addValue(t1, q);
-        [t, p] = pressures.getNextValue();
+    if (time < 20) {
+        let [t, p] = pressures.getNextValue();
+        while (t < time) {
+            graph.addValue(t, p);
+            pressures.popNextValue();
+            let [t1, q] = flows.popNextValue();
+            graph2.addValue(t1, q);
+            [t, p] = pressures.getNextValue();
+        }
+        time += 0.05;
+        graph.drawValues();
+        graph2.drawValues();
     }
-    time += 0.05;
-    graph.drawValues();
-    graph2.drawValues();
 }, 50);
 
 
