@@ -48,7 +48,7 @@ export class Graph {
     private valtoy(v: number): number {
         var maxv = this.maxval;
         var minv = this.minval;
-        let y = this.basey+this.height-4-(this.height-4)*(v-minv)/(maxv-minv)
+        let y = this.basey+this.height-6-(this.height-6)*(v-minv)/(maxv-minv)
         if (y < this.basey || y > this.basey+this.height) {
             return this.basey;
         }
