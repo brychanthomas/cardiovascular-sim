@@ -39,7 +39,7 @@ export class Vasculature {
     }
 
     setC_aFactor(f: number) {
-        this.C_a = 2.2 * f;
+        this.C_a = 2 * f;
     }
 
     getR_p() {

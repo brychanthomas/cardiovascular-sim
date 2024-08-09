@@ -34,8 +34,8 @@ export class Patient {
     computeSteadyState(exerciseFactor: number) {
         let pf = new CirculatoryParameterFactors();
         pf.applyDiseases(this.diseases);
-        pf.setR_pFactor(1 - 0.6*exerciseFactor);
-        pf.setC_aFactor(1 - 0.25*exerciseFactor);
+        pf.setR_pFactor(1 - 0.75*exerciseFactor);
+        //pf.setC_aFactor(1 - 0.25*exerciseFactor);
         this.circulation.applyParameterFactors(pf);
         this.circulation.baroreflex();
     }
