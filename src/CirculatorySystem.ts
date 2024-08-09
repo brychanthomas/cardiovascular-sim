@@ -73,6 +73,10 @@ export class CirculatorySystem {
         return this.aortapressureseq.reduce((a, b) => a + b) / this.aortapressureseq.length;
     }
 
+    getPP() {
+        return Math.max(...this.aortapressureseq) - Math.min(...this.aortapressureseq);
+    }
+
     applyParameterFactors(pf: CirculatoryParameterFactors) {
         this.vasculature.setR_pFactor(pf.getR_pFactor());
         this.vasculature.setR_aFactor(pf.getR_aFactor());

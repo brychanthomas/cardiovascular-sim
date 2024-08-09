@@ -12,7 +12,10 @@ export interface ParameterValues {
     R_p: Parameter,
     R_a: Parameter,
     C_a: Parameter,
-    rate: Parameter
+    rate: Parameter,
+    map: Parameter,
+    pp: Parameter,
+    pressureString: string
 }
 
 export class Patient {
@@ -63,7 +66,10 @@ export class Patient {
             R_p: {value:values.R_p, unit:'mmHg s/mL', changes:[]},
             R_a: {value:values.R_a, unit:'mmHg s/mL', changes:[]},
             C_a: {value:values.C_a, unit:'mL/mmHg', changes:[]},
-            rate: {value:values.rate, unit:'bpm', changes:[]}
+            rate: {value:values.rate, unit:'bpm', changes:[]},
+            map: {value:this.getMAP(), unit: 'mmHg', changes:[]},
+            pp: {value:this.circulation.getPP(), unit: 'mmHg', changes:[]},
+            pressureString: this.getPressureString()
         }
     }
 }

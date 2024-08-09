@@ -42,6 +42,7 @@ export class PatientGui {
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
+        this.createSpan("Exercise intensity: ", parent);
         var slider = document.createElement("input");
         slider.setAttribute("max", "100");
         slider.setAttribute("min", "0");
@@ -60,6 +61,13 @@ export class PatientGui {
 
     private initParameterText(parent: HTMLElement) {
         parent.appendChild(document.createElement('br'));
+        this.parameterLabels['pressureString'] = this.createSpan("", parent);
+        parent.appendChild(document.createElement('br'));
+        this.parameterLabels['map'] = this.createSpan("", parent);
+        parent.appendChild(document.createElement('br'));
+        this.parameterLabels['pp'] = this.createSpan("", parent);
+        parent.appendChild(document.createElement('br'));
+        parent.appendChild(document.createElement('br'));
         this.parameterLabels['R_p'] = this.createSpan("", parent);;
         parent.appendChild(document.createElement('br'));
         this.parameterLabels['R_a'] = this.createSpan("", parent);;
@@ -77,22 +85,28 @@ export class PatientGui {
         return span;
     }
 
-    updateParameters(parameters: ParameterValues) {
+    setParameters(parameters: ParameterValues) {
         let formatted = {
             R_p: 'R<sub>p</sub>',
             R_a: 'R<sub>a</sub>',
             C_a: 'C<sub>a</sub>',
-            rate: 'Heart rate'
+            rate: 'Heart rate',
+            map: 'MAP',
+            pp: 'Pulse pressure'
         }
         let decimalPoints = {
             R_p: 3,
             R_a: 3,
             C_a: 3,
-            rate: 1
+            rate: 1,
+            map: 1,
+            pp: 1
         }
-        console.log(parameters);
         for (var param in parameters) {
-            console.log(param);
+            if (param === 'pressureString') {
+                this.parameterLabels[param].innerHTML = parameters[param];
+                break;
+            }
             this.parameterLabels[param].innerHTML = formatted[param] + ': ' + 
                 Math.round(parameters[param].value*10**decimalPoints[param])/10**decimalPoints[param] + 
                 ' ' + parameters[param].unit;
@@ -122,6 +136,5 @@ export class PatientGui {
             }
         }.bind(this), 50);
     }
-
 
 }
