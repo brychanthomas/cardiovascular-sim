@@ -18,10 +18,7 @@ export class Graph {
         this.width = width;
         this.height = height;
         this.timespan = timespan;
-        this.minval = null;
-        this.maxval = null;
-        this.ts = [];
-        this.vs = [];
+        this.clearValues();
 
         this.drawLabels();
         this.drawAxes();
@@ -124,6 +121,13 @@ export class Graph {
         }
         this.context.stroke();
         this.context.lineWidth = 1;
+    }
+
+    clearValues() {
+        this.minval = null;
+        this.maxval = null;
+        this.ts = [];
+        this.vs = [];
     }
 
 }
