@@ -84,4 +84,17 @@ export class CirculatorySystem {
         this.heart.setDicroticPeakFlowFactor(pf.getDicroticPeakFlowFactor());
         this.parameterFactors = pf;
     }
+
+    /**
+     * Get raw values of all circulatory parameters
+     * @returns object of raw parameter values
+     */
+    getParameterValues() {
+        return {
+            R_p: this.vasculature.getR_p(),
+            R_a: this.vasculature.getR_a(),
+            C_a: this.vasculature.getC_a(),
+            rate: this.heart.getRate()
+        };
+    }
 }
