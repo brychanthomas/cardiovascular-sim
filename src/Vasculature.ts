@@ -42,4 +42,16 @@ export class Vasculature {
         this.C_a = 2.2 * f;
     }
 
+    getR_p() {
+        return this.R_p;
+    }
+
+    getR_a() {
+        return this.R_a;
+    }
+
+    getC_a() {
+        return this.C_a;
+    }
+
 }
