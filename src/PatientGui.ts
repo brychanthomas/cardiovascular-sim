@@ -74,7 +74,12 @@ export class PatientGui {
         parent.appendChild(document.createElement('br'));
         this.parameterLabels['C_a'] = this.createSpan("", parent);
         parent.appendChild(document.createElement('br'));
+        parent.appendChild(document.createElement('br'));
         this.parameterLabels['rate'] = this.createSpan("", parent);
+        parent.appendChild(document.createElement('br'));
+        this.parameterLabels['strokeVolume'] = this.createSpan("", parent);
+        parent.appendChild(document.createElement('br'));
+        this.parameterLabels['co'] = this.createSpan("", parent);
         parent.appendChild(document.createElement('br'));
     }
 
@@ -91,6 +96,8 @@ export class PatientGui {
             R_a: 'R<sub>a</sub>',
             C_a: 'C<sub>a</sub>',
             rate: 'Heart rate',
+            strokeVolume: 'Stroke volume',
+            co: 'Cardiac output',
             map: 'MAP',
             pp: 'Pulse pressure'
         }
@@ -99,6 +106,8 @@ export class PatientGui {
             R_a: 3,
             C_a: 3,
             rate: 1,
+            strokeVolume: 1,
+            co: 2,
             map: 1,
             pp: 1
         }

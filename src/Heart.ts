@@ -1,3 +1,5 @@
+import { NumericalMethods } from './NumericalMethods.js'
+
 export class Heart {
 
     private rate: number; // bpm
@@ -28,6 +30,17 @@ export class Heart {
 
     getRate(): number {
         return this.rate;
+    }
+
+    getStrokeVolume(): number {
+        return this.strokeVolume;
+    }
+
+    getCardiacOutput(): number {
+        let f = this.getFlow.bind(this);
+        let T = 60 / this.getRate();
+        let sv = NumericalMethods.TrapezoidalIntegration(f, T, 100);
+        return sv * this.getRate() / 1000;
     }
 
     setStrokeVolumeFactor(f: number) {

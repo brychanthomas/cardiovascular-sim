@@ -13,6 +13,8 @@ export interface ParameterValues {
     R_a: Parameter,
     C_a: Parameter,
     rate: Parameter,
+    strokeVolume: Parameter,
+    co: Parameter,
     map: Parameter,
     pp: Parameter,
     pressureString: string
@@ -67,6 +69,8 @@ export class Patient {
             R_a: {value:values.R_a, unit:'mmHg s/mL', changes:[]},
             C_a: {value:values.C_a, unit:'mL/mmHg', changes:[]},
             rate: {value:values.rate, unit:'bpm', changes:[]},
+            strokeVolume: {value:values.strokeVolume, unit:'mL', changes:[]},
+            co: {value: values.co, unit:'L/min', changes:[]},
             map: {value:this.getMAP(), unit: 'mmHg', changes:[]},
             pp: {value:this.circulation.getPP(), unit: 'mmHg', changes:[]},
             pressureString: this.getPressureString()

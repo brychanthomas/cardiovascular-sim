@@ -26,4 +26,15 @@ export class NumericalMethods {
         }
         return [ts, ps]
     }
+
+    static TrapezoidalIntegration(f:(t: number)=>number, timespan: number, samples: number) {
+        var h = timespan/samples;
+        var area = 0;
+        for (var i=0; i<samples; i++) {
+            let x0 = h * i;
+            let x1 = h * (i+1);
+            area += 0.5 * h * (f(x0) + f(x1));
+        }
+        return area;
+    }
 }

@@ -18,7 +18,7 @@ function simulateAndRenderPatient(idx: number, exercise: number) {
     console.log(patients[idx].getPressureString());
     console.log(patients[idx].getMAP());
     patientGuis[idx].setGraphSequences(pressures, flows);
-    patientGuis[idx].updateParameters(patients[idx].getParameterValuesAndChanges());
+    patientGuis[idx].setParameters(patients[idx].getParameterValuesAndChanges());
 }
 
 initPatient();

@@ -32,7 +32,7 @@ export class CirculatorySystem {
         var reflex_coeff = 0;
         var set_point = -1;
         while(map < set_point-1 || map > set_point+1) {
-            set_point = this.baroreflexSetPoint + 10*reflex_coeff;
+            set_point = this.baroreflexSetPoint + 8*reflex_coeff;
             if (map < set_point-1) {
                 reflex_coeff += Math.min((set_point-map)*0.001, 0.1);
             } else if (map > set_point+1) {
@@ -98,7 +98,9 @@ export class CirculatorySystem {
             R_p: this.vasculature.getR_p(),
             R_a: this.vasculature.getR_a(),
             C_a: this.vasculature.getC_a(),
-            rate: this.heart.getRate()
+            rate: this.heart.getRate(),
+            strokeVolume: this.heart.getStrokeVolume(),
+            co: this.heart.getCardiacOutput()
         };
     }
 }
