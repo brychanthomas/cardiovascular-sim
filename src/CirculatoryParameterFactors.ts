@@ -31,67 +31,67 @@ export class CirculatoryParameterFactors {
     }
 
     setR_pFactor(f: number) {
-        this.R_pFactor = this.R_pBase * f;
+        this.R_pFactor = f;
     }
 
     getR_pFactor() {
-        return this.R_pFactor;
+        return this.R_pBase * this.R_pFactor;
     }
 
     setR_aFactor(f: number) {
-        this.R_aFactor = this.R_aBase * f;
+        this.R_aFactor = f;
     }
 
     getR_aFactor() {
-        return this.R_aFactor;
+        return this.R_aBase * this.R_aFactor;
     }
 
     setC_aFactor(f: number) {
-        this.C_aFactor = this.C_aBase * f;
+        this.C_aFactor = f;
     }
 
     getC_aFactor() {
-        return this.C_aFactor;
+        return this.C_aBase * this.C_aFactor;
     }
 
     setRateFactor(f: number) {
-        this.rateFactor = this.rateBase * f;
+        this.rateFactor = f;
     }
 
     getRateFactor() {
-        return this.rateFactor;
+        return this.rateBase * this.rateFactor;
     }
 
     setStrokeVolumeFactor(f: number) {
-        this.strokeVolumeFactor = this.strokeVolumeBase * f;
+        this.strokeVolumeFactor = f;
     }
 
     getStrokeVolumeFactor() {
-        return this.strokeVolumeFactor;
+        return this.strokeVolumeBase * this.strokeVolumeFactor;
     }
 
     setSystoleLengthFactor(f: number) {
-        this.systoleLengthFactor = this.systoleLengthBase * f;
+        this.systoleLengthFactor = f;
     }
 
     getSystoleLengthFactor() {
-        return this.systoleLengthFactor;
+        return this.systoleLengthBase * this.systoleLengthFactor;
     }
 
     setDicroticLengthFactor(f: number) {
-        this.dicroticLengthFactor = this.dicroticLengthBase * f;
+        this.dicroticLengthFactor = f;
     }
 
     getDicroticLengthFactor() {
-        return this.dicroticLengthFactor;
+        return this.dicroticLengthBase * this.dicroticLengthFactor;
     }
 
     setDicroticPeakFlowFactor(f: number) {
-        this.dicroticPeakFlowFactor = this.dicroticPeakFlowBase * f;
+        this.dicroticPeakFlowFactor = f;
     }
 
     getDicroticPeakFlowFactor() {
-        return this.dicroticPeakFlowFactor;
+        return this.dicroticPeakFlowBase * this.dicroticPeakFlowFactor;
     }
 
 }
