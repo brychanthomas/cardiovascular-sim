@@ -18,7 +18,7 @@ export class Heart {
 
     getFlow(t: number): number {
         let T = 60/this.rate;
-        let peak_flow = (this.strokeVolume + 2*100*0.05/Math.PI) * Math.PI/(2*this.systoleLength);
+        let peak_flow = (this.strokeVolume) * Math.PI/(2*this.systoleLength);
         if (t%T < this.systoleLength) {
             return peak_flow*Math.sin(Math.PI * (t%T)/this.systoleLength);
         } else if (t%T < this.systoleLength + this.dicroticLength) {
@@ -37,9 +37,10 @@ export class Heart {
     }
 
     getCardiacOutput(): number {
-        let f = this.getFlow.bind(this);
-        let T = 60 / this.getRate();
-        let sv = NumericalMethods.TrapezoidalIntegration(f, T, 100);
+        //let f = this.getFlow.bind(this);
+        //let T = 60 / this.getRate();
+        //let sv = NumericalMethods.TrapezoidalIntegration(f, T, 100);
+        let sv = this.strokeVolume - 2*this.dicroticPeakFlow*this.dicroticLength/Math.PI;
         return sv * this.getRate() / 1000;
     }
 
@@ -52,7 +53,7 @@ export class Heart {
     }
 
     setDicroticPeakFlowFactor(f: number) {
-        this.dicroticPeakFlow = 100 * f;
+        this.dicroticPeakFlow = 50 * f;
     }
 
     setSystoleLengthFactor(f: number) {
