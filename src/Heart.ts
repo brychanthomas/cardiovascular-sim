@@ -41,7 +41,7 @@ export class Heart {
         //let T = 60 / this.getRate();
         //let sv = NumericalMethods.TrapezoidalIntegration(f, T, 100);
         let sv = this.strokeVolume - 2*this.dicroticPeakFlow*this.dicroticLength/Math.PI;
-        return sv * this.getRate() / 1000;
+        return (sv*this.getRate() + this.aorticBackflow*60) / 1000;
     }
 
     setStrokeVolumeFactor(f: number) {
