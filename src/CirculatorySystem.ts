@@ -31,19 +31,26 @@ export class CirculatorySystem {
         var map = this.getMAP();
         var reflex_coeff = 0;
         var set_point = -1;
+        let count = 0;
         while(map < set_point-1 || map > set_point+1) {
-            set_point = this.baroreflexSetPoint + 8*reflex_coeff;
+            set_point = this.baroreflexSetPoint + 6*reflex_coeff;
             if (map < set_point-1) {
+                if (reflex_coeff > 1) { break; }
                 reflex_coeff += Math.min((set_point-map)*0.001, 0.1);
             } else if (map > set_point+1) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
             }
             this.parameterFactors.setStrokeVolumeFactor(1 + 0.3*reflex_coeff);
-            this.parameterFactors.setRateFactor(1 + 2*reflex_coeff);
+            this.parameterFactors.setRateFactor(1 + 2.3*reflex_coeff);
             this.parameterFactors.setSystoleLengthFactor(1 - 0.33*reflex_coeff);
             this.applyParameterFactors(this.parameterFactors);
             this.evaluatePressures();
             map = this.getMAP();
+            count++;
+            if (count > 200) {
+                alert("Baroreflex failed");
+                return;
+            }
         }
         console.log(reflex_coeff);
     }
@@ -86,6 +93,7 @@ export class CirculatorySystem {
         this.heart.setDicroticLengthFactor(pf.getDicroticLengthFactor());
         this.heart.setSystoleLengthFactor(pf.getSystoleLengthFactor());
         this.heart.setDicroticPeakFlowFactor(pf.getDicroticPeakFlowFactor());
+        this.heart.setAorticBackflowFactor(pf.getAorticBackflowFactor());
         this.parameterFactors = pf;
     }
 

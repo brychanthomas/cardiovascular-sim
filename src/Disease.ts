@@ -28,4 +28,8 @@ export abstract class Disease {
         return 1;
     }
 
+    getAorticBackflowFactor() {
+        return 1;
+    }
+
 }

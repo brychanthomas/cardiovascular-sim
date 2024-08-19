@@ -18,6 +18,8 @@ export class CirculatoryParameterFactors {
     private dicroticLengthFactor = 1;
     private dicroticPeakFlowBase = 1;
     private dicroticPeakFlowFactor = 1;
+    private aorticBackflowBase = 1;
+    private aorticBackflowFactor = 1;
 
     applyDiseases(list: Disease[]) {
         for (var i=0; i<list.length; i++) {
@@ -27,6 +29,7 @@ export class CirculatoryParameterFactors {
             this.strokeVolumeBase *= list[i].getStrokeVolumeFactor();
             this.dicroticLengthBase *= list[i].getDicroticLengthFactor();
             this.dicroticPeakFlowBase *= list[i].getDicroticPeakFlowFactor();
+            this.aorticBackflowBase *= list[i].getAorticBackflowFactor();
         }
     }
 
@@ -92,6 +95,14 @@ export class CirculatoryParameterFactors {
 
     getDicroticPeakFlowFactor() {
         return this.dicroticPeakFlowBase * this.dicroticPeakFlowFactor;
+    }
+
+    setAorticBackflowFactor(f: number) {
+        this.aorticBackflowFactor = f;
+    }
+
+    getAorticBackflowFactor() {
+        return this.aorticBackflowBase * this.aorticBackflowFactor;
     }
 
 }

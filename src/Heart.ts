@@ -1,5 +1,3 @@
-import { NumericalMethods } from './NumericalMethods.js'
-
 export class Heart {
 
     private rate: number; // bpm
@@ -7,6 +5,7 @@ export class Heart {
     private systoleLength: number; // s
     private dicroticPeakFlow: number; // mL/s
     private dicroticLength: number; // s
+    private aorticBackflow; // mL/s
 
     constructor() {
         this.setRateFactor(1);
@@ -14,17 +13,18 @@ export class Heart {
         this.setSystoleLengthFactor(1);
         this.setDicroticLengthFactor(1);
         this.setDicroticPeakFlowFactor(1);
+        this.setAorticBackflowFactor(1);
     }
 
     getFlow(t: number): number {
         let T = 60/this.rate;
         let peak_flow = (this.strokeVolume) * Math.PI/(2*this.systoleLength);
         if (t%T < this.systoleLength) {
-            return peak_flow*Math.sin(Math.PI * (t%T)/this.systoleLength);
+            return this.aorticBackflow+peak_flow*Math.sin(Math.PI * (t%T)/this.systoleLength);
         } else if (t%T < this.systoleLength + this.dicroticLength) {
-            return -this.dicroticPeakFlow*Math.sin(Math.PI*(t%T-this.systoleLength)/this.dicroticLength);
+            return this.aorticBackflow-this.dicroticPeakFlow*Math.sin(Math.PI*(t%T-this.systoleLength)/this.dicroticLength);
         } else {
-            return 0;
+            return this.aorticBackflow;
         }
     }
 
@@ -53,7 +53,7 @@ export class Heart {
     }
 
     setDicroticPeakFlowFactor(f: number) {
-        this.dicroticPeakFlow = 50 * f;
+        this.dicroticPeakFlow = 100 * f;
     }
 
     setSystoleLengthFactor(f: number) {
@@ -62,5 +62,9 @@ export class Heart {
 
     setRateFactor(f: number) {
         this.rate = 53 * f;
+    }
+
+    setAorticBackflowFactor(f: number) {
+        this.aorticBackflow = -0.1 * f;
     }
 }
