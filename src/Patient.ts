@@ -1,6 +1,7 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
 import { CirculatoryParameterFactors } from './CirculatoryParameterFactors.js';
+import { AorticRegurguitation, Atherosclerosis } from './Diseases.js';
 
 interface Parameter {
     value: number,
@@ -23,7 +24,7 @@ export interface ParameterValues {
 export class Patient {
 
     private circulation: CirculatorySystem;
-    private diseases: Disease[] = [];
+    private diseases: Disease[] = [new Atherosclerosis()];
     private baroreflexSetPoint = 93;
 
     constructor() {
