@@ -1,11 +1,15 @@
 import { Disease } from './Disease.js';
 
 export class Atherosclerosis extends Disease {
-    getC_aFactor() { return 0.7; }
-    getR_aFactor() { return 1.2; }
-    getR_pFactor() { return 1.2; }
+    parameterFactors = {
+        "C_a": 0.7,
+        "R_a": 1.2,
+        "R_p": 1.2
+    }
 }
 
 export class AorticRegurguitation extends Disease {
-    getAorticBackflowFactor() { return 400; }
+    parameterFactors = {
+        "aorticBackflow": 400
+    }
 }
