@@ -1,6 +1,18 @@
 import { Disease } from './Disease.js';
 import { Parameter } from './Parameter.js';
 
+export enum PARAM {
+    R_p,
+    R_a,
+    C_a,
+    rate,
+    strokeVolume,
+    systoleLength,
+    dicroticLength,
+    dicroticPeakFlow,
+    aorticBackflow
+}
+
 export class CirculatoryParameters {
     // private R_pBase = 1;
     // private R_aBase = 1;
@@ -15,33 +27,27 @@ export class CirculatoryParameters {
     private parameters;
 
     constructor() {
-        this.parameters = {
-            "R_p": new Parameter(), //change key to enum?
-            "R_a": new Parameter(),
-            "C_a": new Parameter(),
-            "rate": new Parameter(),
-            "strokeVolume": new Parameter(),
-            "systoleLength": new Parameter(),
-            "dicroticLength": new Parameter(),
-            "dicroticPeakFlow": new Parameter(),
-            "aorticBackflow": new Parameter()
+        this.parameters = {}
+        for (var param in PARAM) {
+            this.parameters[param] = new Parameter();
         }
     }
 
     applyDiseases(list: Disease[]) {
         for (var i=0; i<list.length; i++) {
-           let diseaseFactors = list[i].getFactors();
-           for (var factor in diseaseFactors) {
-            this.getParameter(factor).setDiseaseFactor(diseaseFactors[factor]);
-           }
+            let diseaseFactors = list[i].getFactors();
+            var factor: any;
+            for (factor in diseaseFactors) {
+                this.getParameter(<PARAM>factor).setDiseaseFactor(diseaseFactors[factor]);
+            }
         }
     }
 
-    getParameter(id: string) {
+    getParameter(id: PARAM) {
         return this.parameters[id];
     }
 
-    getOverallFactor(id: string) {
+    getOverallFactor(id: PARAM) {
         return this.parameters[id].getOverallFactor();
     }
 

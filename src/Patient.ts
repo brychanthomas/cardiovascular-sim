@@ -1,6 +1,6 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
-import { CirculatoryParameters } from './CirculatoryParameters.js';
+import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
 import { AorticRegurguitation, Atherosclerosis } from './Diseases.js';
 
 interface Parameter {
@@ -24,7 +24,7 @@ export interface ParameterValues {
 export class Patient {
 
     private circulation: CirculatorySystem;
-    private diseases: Disease[] = [];
+    private diseases: Disease[] = [new AorticRegurguitation()];
 
     constructor() {
         this.circulation = new CirculatorySystem();
@@ -36,7 +36,7 @@ export class Patient {
     computeSteadyState(exerciseFactor: number) {
         let pf = new CirculatoryParameters();
         pf.applyDiseases(this.diseases);
-        pf.getParameter("R_p").setExerciseFactor(1 - 0.75*exerciseFactor);
+        pf.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.75*exerciseFactor);
         //pf.setC_aFactor(1 - 0.25*exerciseFactor);
         this.circulation.applyParameterFactors(pf);
         this.circulation.baroreflex();
