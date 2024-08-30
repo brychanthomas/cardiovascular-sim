@@ -1,6 +1,6 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
-import { CirculatoryParameterFactors } from './CirculatoryParameterFactors.js';
+import { CirculatoryParameters } from './CirculatoryParameters.js';
 import { AorticRegurguitation, Atherosclerosis } from './Diseases.js';
 
 interface Parameter {
@@ -24,8 +24,7 @@ export interface ParameterValues {
 export class Patient {
 
     private circulation: CirculatorySystem;
-    private diseases: Disease[] = [new Atherosclerosis()];
-    private baroreflexSetPoint = 93;
+    private diseases: Disease[] = [];
 
     constructor() {
         this.circulation = new CirculatorySystem();
@@ -35,9 +34,9 @@ export class Patient {
      * Update circulatory parameters and evaluate pressures for given exercise factor
      */
     computeSteadyState(exerciseFactor: number) {
-        let pf = new CirculatoryParameterFactors();
+        let pf = new CirculatoryParameters();
         pf.applyDiseases(this.diseases);
-        pf.setR_pFactor(1 - 0.75*exerciseFactor);
+        pf.getParameter("R_p").setExerciseFactor(1 - 0.75*exerciseFactor);
         //pf.setC_aFactor(1 - 0.25*exerciseFactor);
         this.circulation.applyParameterFactors(pf);
         this.circulation.baroreflex();

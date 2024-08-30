@@ -41,4 +41,8 @@ export class CirculatoryParameters {
         return this.parameters[id];
     }
 
+    getOverallFactor(id: string) {
+        return this.parameters[id].getOverallFactor();
+    }
+
 }

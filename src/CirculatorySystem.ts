@@ -1,7 +1,7 @@
 import { Heart } from './Heart.js';
 import { Vasculature } from './Vasculature.js';
 import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
-import { CirculatoryParameterFactors } from './CirculatoryParameterFactors.js';
+import { CirculatoryParameters } from './CirculatoryParameters.js';
 
 export class CirculatorySystem {
 
@@ -12,7 +12,7 @@ export class CirculatorySystem {
     private aortapressureseq: number[];
 
     private baroreflexSetPoint = 93;
-    private parameterFactors = new CirculatoryParameterFactors();
+    private parameterFactors = new CirculatoryParameters();
 
     evaluatePressures() {
         let timespan = 10;
@@ -40,9 +40,9 @@ export class CirculatorySystem {
             } else if (map > set_point+1) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
             }
-            this.parameterFactors.setStrokeVolumeFactor(1 + 0.3*reflex_coeff);
-            this.parameterFactors.setRateFactor(1 + 2.3*reflex_coeff);
-            this.parameterFactors.setSystoleLengthFactor(1 - 0.33*reflex_coeff);
+            this.parameterFactors.getParameter("strokeVolume").setExerciseFactor(1 + 0.3*reflex_coeff);
+            this.parameterFactors.getParameter("rate").setExerciseFactor(1 + 2.3*reflex_coeff);
+            this.parameterFactors.getParameter("systoleLength").setExerciseFactor(1 - 0.33*reflex_coeff);
             this.applyParameterFactors(this.parameterFactors);
             this.evaluatePressures();
             map = this.getMAP();
@@ -84,16 +84,16 @@ export class CirculatorySystem {
         return Math.max(...this.aortapressureseq) - Math.min(...this.aortapressureseq);
     }
 
-    applyParameterFactors(pf: CirculatoryParameterFactors) {
-        this.vasculature.setR_pFactor(pf.getR_pFactor());
-        this.vasculature.setR_aFactor(pf.getR_aFactor());
-        this.vasculature.setC_aFactor(pf.getC_aFactor());
-        this.heart.setStrokeVolumeFactor(pf.getStrokeVolumeFactor());
-        this.heart.setRateFactor(pf.getRateFactor());
-        this.heart.setDicroticLengthFactor(pf.getDicroticLengthFactor());
-        this.heart.setSystoleLengthFactor(pf.getSystoleLengthFactor());
-        this.heart.setDicroticPeakFlowFactor(pf.getDicroticPeakFlowFactor());
-        this.heart.setAorticBackflowFactor(pf.getAorticBackflowFactor());
+    applyParameterFactors(pf: CirculatoryParameters) {
+        this.vasculature.setR_pFactor(pf.getOverallFactor("R_p"));
+        this.vasculature.setR_aFactor(pf.getOverallFactor("R_a"));
+        this.vasculature.setC_aFactor(pf.getOverallFactor("C_a"));
+        this.heart.setStrokeVolumeFactor(pf.getOverallFactor("strokeVolume"));
+        this.heart.setRateFactor(pf.getOverallFactor("rate"));
+        this.heart.setDicroticLengthFactor(pf.getOverallFactor("dicroticLength"));
+        this.heart.setSystoleLengthFactor(pf.getOverallFactor("systoleLength"));
+        this.heart.setDicroticPeakFlowFactor(pf.getOverallFactor("dicroticPeakFlow"));
+        this.heart.setAorticBackflowFactor(pf.getOverallFactor("aorticBackflow"));
         this.parameterFactors = pf;
     }
 
