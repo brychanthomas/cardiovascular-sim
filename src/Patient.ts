@@ -24,7 +24,7 @@ export interface ParameterValues {
 export class Patient {
 
     private circulation: CirculatorySystem;
-    private diseases: Disease[] = [new AorticRegurguitation()];
+    private diseases: Disease[] = [];
 
     constructor() {
         this.circulation = new CirculatorySystem();
@@ -34,11 +34,11 @@ export class Patient {
      * Update circulatory parameters and evaluate pressures for given exercise factor
      */
     computeSteadyState(exerciseFactor: number) {
-        let pf = new CirculatoryParameters();
-        pf.applyDiseases(this.diseases);
-        pf.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.75*exerciseFactor);
+        let parameters = new CirculatoryParameters();
+        parameters.applyDiseases(this.diseases);
+        parameters.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.75*exerciseFactor);
         //pf.setC_aFactor(1 - 0.25*exerciseFactor);
-        this.circulation.applyParameterFactors(pf);
+        this.circulation.applyParameters(parameters);
         this.circulation.baroreflex();
     }
 

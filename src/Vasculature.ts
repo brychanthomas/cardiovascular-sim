@@ -9,11 +9,7 @@ export class Vasculature {
 
     private flowFunc: (t:number)=>number;
 
-    constructor() {
-        this.setR_pFactor(1);
-        this.setR_aFactor(1);
-        this.setC_aFactor(1);
-    }
+    constructor() {}
 
     private dp_dt(t, p) {
         let Q = this.flowFunc;
@@ -30,16 +26,16 @@ export class Vasculature {
         return [ts, ps];
     }
 
-    setR_pFactor(f: number) {
-        this.R_p = 1 * f;
+    setR_p(val: number) {
+        this.R_p = val;
     }
 
-    setR_aFactor(f: number) {
-        this.R_a = 0.03 * f;
+    setR_a(val: number) {
+        this.R_a = val;
     }
 
-    setC_aFactor(f: number) {
-        this.C_a = 2 * f;
+    setC_a(val: number) {
+        this.C_a = val;
     }
 
     getR_p() {

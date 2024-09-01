@@ -5,16 +5,9 @@ export class Heart {
     private systoleLength: number; // s
     private dicroticPeakFlow: number; // mL/s
     private dicroticLength: number; // s
-    private aorticBackflow; // mL/s
+    private aorticBackflow: number; // mL/s
 
-    constructor() {
-        this.setRateFactor(1);
-        this.setStrokeVolumeFactor(1);
-        this.setSystoleLengthFactor(1);
-        this.setDicroticLengthFactor(1);
-        this.setDicroticPeakFlowFactor(1);
-        this.setAorticBackflowFactor(1);
-    }
+    constructor() {}
 
     getFlow(t: number): number {
         let T = 60/this.rate;
@@ -44,27 +37,27 @@ export class Heart {
         return (sv*this.getRate() + this.aorticBackflow*60) / 1000;
     }
 
-    setStrokeVolumeFactor(f: number) {
-        this.strokeVolume = Math.min(95 * f, 125);
+    setStrokeVolume(val: number) {
+        this.strokeVolume = Math.min(val, 125);
     }
 
-    setDicroticLengthFactor(f: number) {
-        this.dicroticLength = 0.05 * f;
+    setDicroticLength(val: number) {
+        this.dicroticLength = val;
     }
 
-    setDicroticPeakFlowFactor(f: number) {
-        this.dicroticPeakFlow = 100 * f;
+    setDicroticPeakFlow(val: number) {
+        this.dicroticPeakFlow = val;
     }
 
-    setSystoleLengthFactor(f: number) {
-        this.systoleLength = 0.3 * f;
+    setSystoleLength(val: number) {
+        this.systoleLength = val;
     }
 
-    setRateFactor(f: number) {
-        this.rate = 53 * f;
+    setRate(val: number) {
+        this.rate = val;
     }
 
-    setAorticBackflowFactor(f: number) {
-        this.aorticBackflow = -0.1 * f;
+    setAorticBackflow(val: number) {
+        this.aorticBackflow = val;
     }
 }
