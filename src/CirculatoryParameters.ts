@@ -13,23 +13,26 @@ export enum PARAM {
     aorticBackflow
 }
 
-export class CirculatoryParameters {
-    // private R_pBase = 1;
-    // private R_aBase = 1;
-    // private C_aBase = 1;
-    // private rateBase = 1;
-    // private strokeVolumeBase = 1;
-    // private systoleLengthBase = 1;
-    // private dicroticLengthBase = 1;
-    // private dicroticPeakFlowBase = 1;
-    // private aorticBackflowBase = 1;
+const baseValues = {
+    [PARAM.R_p]: 1,
+    [PARAM.R_a]: 0.03,
+    [PARAM.C_a]: 2,
+    [PARAM.rate]: 53,
+    [PARAM.strokeVolume]: 95,
+    [PARAM.systoleLength]: 0.3,
+    [PARAM.dicroticLength]: 0.05,
+    [PARAM.dicroticPeakFlow]: 100,
+    [PARAM.aorticBackflow]:-0.1
+}
 
-    private parameters;
+export class CirculatoryParameters {
+
+    private parameters: { [id: number]: Parameter };
 
     constructor() {
         this.parameters = {}
         for (var param in PARAM) {
-            this.parameters[param] = new Parameter();
+            this.parameters[param] = new Parameter(baseValues[param]);
         }
     }
 
@@ -47,8 +50,8 @@ export class CirculatoryParameters {
         return this.parameters[id];
     }
 
-    getOverallFactor(id: PARAM) {
-        return this.parameters[id].getOverallFactor();
+    getValue(id: PARAM) {
+        return this.parameters[id].getValue();
     }
 
 }
