@@ -14,15 +14,15 @@ export enum PARAM {
 }
 
 const baseValues = {
-    [PARAM.R_p]: 1,
-    [PARAM.R_a]: 0.03,
-    [PARAM.C_a]: 2,
-    [PARAM.rate]: 53,
-    [PARAM.strokeVolume]: 95,
-    [PARAM.systoleLength]: 0.3,
-    [PARAM.dicroticLength]: 0.05,
-    [PARAM.dicroticPeakFlow]: 100,
-    [PARAM.aorticBackflow]:-0.1
+    [PARAM.R_p]: 1,                // mmHg s/mL
+    [PARAM.R_a]: 0.03,             // mmHg s/mL
+    [PARAM.C_a]: 2,                // mL/mmHg
+    [PARAM.rate]: 53,              // bpm
+    [PARAM.strokeVolume]: 95,      // ml
+    [PARAM.systoleLength]: 0.3,    // s
+    [PARAM.dicroticLength]: 0.05,  // s
+    [PARAM.dicroticPeakFlow]: 100, // mL/s
+    [PARAM.aorticBackflow]: -0.1   // mL/s
 }
 
 export class CirculatoryParameters {

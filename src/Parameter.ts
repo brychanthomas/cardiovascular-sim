@@ -1,6 +1,6 @@
 export class Parameter {
 
-    private baseValue;
+    private baseValue: number;
     private diseaseFactor = 1;
     private baroreflexFactor = 1;
     private exerciseFactor = 1;
