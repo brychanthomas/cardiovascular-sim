@@ -17,7 +17,7 @@ const baseValues = {
     [PARAM.R_p]: 1,                // mmHg s/mL
     [PARAM.R_a]: 0.03,             // mmHg s/mL
     [PARAM.C_a]: 2,                // mL/mmHg
-    [PARAM.rate]: 53,              // bpm
+    [PARAM.rate]: 55,              // bpm
     [PARAM.strokeVolume]: 95,      // ml
     [PARAM.systoleLength]: 0.3,    // s
     [PARAM.dicroticLength]: 0.05,  // s

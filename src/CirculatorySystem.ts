@@ -40,9 +40,10 @@ export class CirculatorySystem {
             } else if (map > set_point+1) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
             }
-            this.parameters.getParameter(PARAM.strokeVolume).setExerciseFactor(1 + 0.3*reflex_coeff);
-            this.parameters.getParameter(PARAM.rate).setExerciseFactor(1 + 2.3*reflex_coeff);
-            this.parameters.getParameter(PARAM.systoleLength).setExerciseFactor(1 - 0.33*reflex_coeff);
+            this.parameters.getParameter(PARAM.strokeVolume).setBaroreflexFactor(1 + 0.3*reflex_coeff);
+            this.parameters.getParameter(PARAM.rate).setBaroreflexFactor(1 + 2.3*reflex_coeff);
+            this.parameters.getParameter(PARAM.systoleLength).setBaroreflexFactor(1 - 0.33*reflex_coeff);
+            this.parameters.getParameter(PARAM.R_p).setBaroreflexFactor(1 + 0.33*reflex_coeff); // 1 / 0.75(25% splanchnic flow) = 1.33
             this.applyParameters(this.parameters);
             this.evaluatePressures();
             map = this.getMAP();
