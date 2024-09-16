@@ -41,7 +41,8 @@ export class Heart {
 
     setParameters(params: CirculatoryParameters) {
         this.strokeVolume = (params.getValue(PARAM.msfp) / params.getValue(PARAM.rvr)) / params.getValue(PARAM.rate);
-        this.strokeVolume = Math.min(this.strokeVolume, 125);
+        this.strokeVolume = Math.min(this.strokeVolume, params.getValue(PARAM.maxStrokeVolume));
+        // TODO: if SV limited, calculate RAP
         this.dicroticLength = params.getValue(PARAM.dicroticLength);
         this.dicroticPeakFlow = params.getValue(PARAM.dicroticPeakFlow);
         this.systoleLength = params.getValue(PARAM.systoleLength);

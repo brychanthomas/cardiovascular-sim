@@ -11,7 +11,8 @@ export enum PARAM {
     dicroticPeakFlow,
     aorticBackflow,
     msfp,
-    rvr
+    rvr,
+    maxStrokeVolume
 }
 
 const baseValues = {
@@ -24,7 +25,8 @@ const baseValues = {
     [PARAM.dicroticPeakFlow]: 100, // mL/s
     [PARAM.aorticBackflow]: -0.1,  // mL/s
     [PARAM.msfp]: 7,               // mmHg
-    [PARAM.rvr]: 7/5000            // mmHg s/mL
+    [PARAM.rvr]: 7/5000,           // mmHg s/mL
+    [PARAM.maxStrokeVolume]: 125   // ml
 }
 
 export class CirculatoryParameters {
