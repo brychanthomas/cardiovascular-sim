@@ -40,13 +40,17 @@ export class CirculatoryParameters {
         }
     }
 
-    applyDiseases(list: Disease[]) {
-        for (var i=0; i<list.length; i++) {
-            let diseaseFactors = list[i].getFactors();
-            var factor: any;
-            for (factor in diseaseFactors) {
-                this.getParameter(<PARAM>factor).setDiseaseFactor(diseaseFactors[factor]);
+    applyDiseases(diseases: Disease[]) {
+        var param: any;
+        for (param in PARAM) { // for each parameter
+            var factor = 1;
+            for (var i=0; i<diseases.length; i++) { // for each disease
+                let diseaseFactors = diseases[i].getFactors();
+                if (param in diseaseFactors) { // if disease modifies parameter
+                    factor *= diseaseFactors[param];
+                }
             }
+            this.getParameter(<PARAM>param).setDiseaseFactor(factor);
         }
     }
 
