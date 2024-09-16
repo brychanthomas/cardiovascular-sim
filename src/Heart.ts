@@ -8,6 +8,7 @@ export class Heart {
     private dicroticPeakFlow: number; // mL/s
     private dicroticLength: number; // s
     private aorticBackflow: number; // mL/s
+    private rap: number;
 
     constructor() {}
 
@@ -41,12 +42,19 @@ export class Heart {
 
     setParameters(params: CirculatoryParameters) {
         this.strokeVolume = (params.getValue(PARAM.msfp) / params.getValue(PARAM.rvr)) / params.getValue(PARAM.rate);
-        this.strokeVolume = Math.min(this.strokeVolume, params.getValue(PARAM.maxStrokeVolume));
-        // TODO: if SV limited, calculate RAP
+        if (this.strokeVolume > params.getValue(PARAM.maxStrokeVolume)) {
+            this.strokeVolume = params.getValue(PARAM.maxStrokeVolume);
+            this.rap = this.strokeVolume * params.getValue(PARAM.rate) * params.getValue(PARAM.rvr);
+            this.rap = -this.rap + params.getValue(PARAM.msfp);
+        } else { this.rap = 0 }
         this.dicroticLength = params.getValue(PARAM.dicroticLength);
         this.dicroticPeakFlow = params.getValue(PARAM.dicroticPeakFlow);
         this.systoleLength = params.getValue(PARAM.systoleLength);
         this.rate = params.getValue(PARAM.rate);
         this.aorticBackflow = params.getValue(PARAM.aorticBackflow);
+    }
+
+    getRap() {
+        return this.rap;
     }
 }
