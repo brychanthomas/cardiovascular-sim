@@ -1,5 +1,5 @@
 import { Disease } from './Disease.js';
-import { Parameter } from './Parameter.js';
+import { SummarisableParameter } from './SummarisableParameter.js';
 
 export enum PARAM {
     R_p,
@@ -31,26 +31,29 @@ const baseValues = {
 
 export class CirculatoryParameters {
 
-    private parameters: { [id: number]: Parameter };
+    private parameters: { [id: number]: SummarisableParameter };
 
     constructor() {
         this.parameters = {}
         for (var param in PARAM) {
-            this.parameters[param] = new Parameter(baseValues[param]);
+            this.parameters[param] = new SummarisableParameter(baseValues[param]);
         }
     }
 
     applyDiseases(diseases: Disease[]) {
         var param: any;
         for (param in PARAM) { // for each parameter
-            var factor = 1;
+            var factors = [];
+            var diseaseNames = [];
             for (var i=0; i<diseases.length; i++) { // for each disease
                 let diseaseFactors = diseases[i].getFactors();
                 if (param in diseaseFactors) { // if disease modifies parameter
-                    factor *= diseaseFactors[param];
+                    factors.push(diseaseFactors[param]);
+                    diseaseNames.push(diseases[i].getName());
                 }
             }
-            this.getParameter(<PARAM>param).setDiseaseFactor(factor);
+            this.getParameter(<PARAM>param).setDiseaseFactors(factors);
+            this.getParameter(<PARAM>param).setDiseaseFactorExplanations(diseaseNames);
         }
     }
 

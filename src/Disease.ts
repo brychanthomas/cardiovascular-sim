@@ -8,4 +8,6 @@ export abstract class Disease {
         return this.parameterFactors;
     }
 
+    abstract getName(): string;
+
 }

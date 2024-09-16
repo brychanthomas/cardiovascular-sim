@@ -7,10 +7,14 @@ export class Atherosclerosis extends Disease {
         [PARAM.R_a]: 1.2,
         [PARAM.R_p]: 1.2
     }
+
+    getName() { return "Atherosclerosis" }
 }
 
 export class AorticRegurguitation extends Disease {
     parameterFactors = {
         [PARAM.aorticBackflow]: 400
     }
+
+    getName() { return "Aortic regurguitation" }
 }
