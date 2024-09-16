@@ -29,6 +29,20 @@ const baseValues = {
     [PARAM.maxStrokeVolume]: 125   // ml
 }
 
+const units = {
+    [PARAM.R_p]: 'mmHg s/mL',
+    [PARAM.R_a]: 'mmHg s/mL',
+    [PARAM.C_a]: 'mL/mmHg',
+    [PARAM.rate]: 'bpm',
+    [PARAM.systoleLength]: 's',
+    [PARAM.dicroticLength]: 's',
+    [PARAM.dicroticPeakFlow]: 'mL/s',
+    [PARAM.aorticBackflow]: 'mL/s',
+    [PARAM.msfp]: 'mmHg',
+    [PARAM.rvr]: 'mmHg s/mL',
+    [PARAM.maxStrokeVolume]: 'ml'
+}
+
 export class CirculatoryParameters {
 
     private parameters: { [id: number]: SummarisableParameter };
@@ -37,6 +51,7 @@ export class CirculatoryParameters {
         this.parameters = {}
         for (var param in PARAM) {
             this.parameters[param] = new SummarisableParameter(baseValues[param]);
+            this.parameters[param].setUnit(units[param]);
         }
     }
 
