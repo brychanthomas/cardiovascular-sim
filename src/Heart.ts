@@ -1,3 +1,5 @@
+import { CirculatoryParameters, PARAM } from "./CirculatoryParameters.js";
+
 export class Heart {
 
     private rate: number; // bpm
@@ -37,27 +39,13 @@ export class Heart {
         return (sv*this.getRate() + this.aorticBackflow*60) / 1000;
     }
 
-    setStrokeVolume(val: number) {
-        this.strokeVolume = Math.min(val, 125);
-    }
-
-    setDicroticLength(val: number) {
-        this.dicroticLength = val;
-    }
-
-    setDicroticPeakFlow(val: number) {
-        this.dicroticPeakFlow = val;
-    }
-
-    setSystoleLength(val: number) {
-        this.systoleLength = val;
-    }
-
-    setRate(val: number) {
-        this.rate = val;
-    }
-
-    setAorticBackflow(val: number) {
-        this.aorticBackflow = val;
+    setParameters(params: CirculatoryParameters) {
+        this.strokeVolume = (params.getValue(PARAM.msfp) / params.getValue(PARAM.rvr)) / params.getValue(PARAM.rate);
+        this.strokeVolume = Math.min(this.strokeVolume, 125);
+        this.dicroticLength = params.getValue(PARAM.dicroticLength);
+        this.dicroticPeakFlow = params.getValue(PARAM.dicroticPeakFlow);
+        this.systoleLength = params.getValue(PARAM.systoleLength);
+        this.rate = params.getValue(PARAM.rate);
+        this.aorticBackflow = params.getValue(PARAM.aorticBackflow);
     }
 }

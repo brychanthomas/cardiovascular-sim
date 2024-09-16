@@ -40,10 +40,11 @@ export class CirculatorySystem {
             } else if (map > set_point+1) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
             }
-            this.parameters.getParameter(PARAM.strokeVolume).setBaroreflexFactor(1 + 0.3*reflex_coeff);
+            //this.parameters.getParameter(PARAM.strokeVolume).setBaroreflexFactor(1 + 0.3*reflex_coeff);
             this.parameters.getParameter(PARAM.rate).setBaroreflexFactor(1 + 2.3*reflex_coeff);
             this.parameters.getParameter(PARAM.systoleLength).setBaroreflexFactor(1 - 0.33*reflex_coeff);
             this.parameters.getParameter(PARAM.R_p).setBaroreflexFactor(1 + 0.33*reflex_coeff); // 1 / 0.75(25% splanchnic flow) = 1.33
+            this.parameters.getParameter(PARAM.msfp).setBaroreflexFactor(1 + 2*reflex_coeff);
             this.applyParameters(this.parameters);
             this.evaluatePressures();
             map = this.getMAP();
@@ -89,12 +90,7 @@ export class CirculatorySystem {
         this.vasculature.setR_p(pf.getValue(PARAM.R_p));
         this.vasculature.setR_a(pf.getValue(PARAM.R_a));
         this.vasculature.setC_a(pf.getValue(PARAM.C_a));
-        this.heart.setStrokeVolume(pf.getValue(PARAM.strokeVolume));
-        this.heart.setRate(pf.getValue(PARAM.rate));
-        this.heart.setDicroticLength(pf.getValue(PARAM.dicroticLength));
-        this.heart.setSystoleLength(pf.getValue(PARAM.systoleLength));
-        this.heart.setDicroticPeakFlow(pf.getValue(PARAM.dicroticPeakFlow));
-        this.heart.setAorticBackflow(pf.getValue(PARAM.aorticBackflow));
+        this.heart.setParameters(pf);
         this.parameters = pf;
     }
 

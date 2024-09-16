@@ -37,6 +37,7 @@ export class Patient {
         let parameters = new CirculatoryParameters();
         parameters.applyDiseases(this.diseases);
         parameters.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.81*exerciseFactor); // TPR drops to 25% = 0.19(vasodilation)*1.33(splanchnic vasoconstriction)
+        parameters.getParameter(PARAM.rvr).setExerciseFactor(1 - 0.3*exerciseFactor);
         //pf.setC_aFactor(1 - 0.25*exerciseFactor);
         this.circulation.applyParameters(parameters);
         this.circulation.baroreflex();
