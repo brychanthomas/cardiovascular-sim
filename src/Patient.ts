@@ -59,22 +59,7 @@ export class Patient {
         return this.circulation.getMAP();
     }
 
-    /**
-     * Get object with raw values of parameter values as well as descriptions
-     * of changes from the base
-     */
-    getParameterValuesAndChanges(): ParameterValues {
-        let values = this.circulation.getParameterValues();
-        return {
-            R_p: {value:values.R_p, unit:'mmHg s/mL', changes:[]},
-            R_a: {value:values.R_a, unit:'mmHg s/mL', changes:[]},
-            C_a: {value:values.C_a, unit:'mL/mmHg', changes:[]},
-            rate: {value:values.rate, unit:'bpm', changes:[]},
-            strokeVolume: {value:values.strokeVolume, unit:'mL', changes:[]},
-            co: {value: values.co, unit:'L/min', changes:[]},
-            map: {value:this.getMAP(), unit: 'mmHg', changes:[]},
-            pp: {value:this.circulation.getPP(), unit: 'mmHg', changes:[]},
-            pressureString: this.getPressureString()
-        }
+    getCirculatoryParameterSummaries() {
+        return this.circulation.getParameterSummaries();
     }
 }

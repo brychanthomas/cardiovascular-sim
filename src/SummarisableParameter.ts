@@ -1,6 +1,7 @@
 import { Parameter } from './Parameter.js'
 
 export interface ParameterSummary {
+    name: string,
     base: string,
     value: string,
     exerciseFactor: string,
@@ -11,12 +12,17 @@ export interface ParameterSummary {
 export class SummarisableParameter extends Parameter {
 
     private unit: string = '';
+    private formattedName: string = '';
     private exerciseFactorExplanation: string = '';
     private baroreflexFactorExplanation: string = '';
     private diseaseFactorExplanations: string[] = [];
 
     setUnit(unit: string) {
         this.unit = unit;
+    }
+
+    setFormattedName(name: string) {
+        this.formattedName = name;
     }
 
     setExerciseFactorExplanation(exp: string) {
@@ -37,6 +43,7 @@ export class SummarisableParameter extends Parameter {
             diseaseFactorText += this.diseaseFactors[i] + 'x - ' + this.diseaseFactorExplanations[i] + '<br>';
         }
         return {
+            name: this.formattedName,
             base: this.baseValue.toPrecision(3) + ' ' + this.unit,
             value: this.getValue().toPrecision(3) + ' ' + this.unit,
             exerciseFactor: (this.round(this.exerciseFactor) === 1) ? '' : this.round(this.exerciseFactor) + 'x - ' + this.exerciseFactorExplanation,

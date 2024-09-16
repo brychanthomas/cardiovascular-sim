@@ -1,6 +1,8 @@
 import { Graph } from './Graph.js';
 import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
-import type { ParameterValues } from './Patient.js';
+import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
+import { ParameterSummary } from './SummarisableParameter.js';
+
 
 interface HTMLElementStore {
     [key: string]: HTMLElement;
@@ -60,65 +62,24 @@ export class PatientGui {
     }
 
     private initParameterText(parent: HTMLElement) {
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['pressureString'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['map'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['pp'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['R_p'] = this.createSpan("", parent);;
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['R_a'] = this.createSpan("", parent);;
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['C_a'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['rate'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['strokeVolume'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
-        this.parameterLabels['co'] = this.createSpan("", parent);
-        parent.appendChild(document.createElement('br'));
+        for (var param in Object.values(PARAM)) {
+            this.parameterLabels[param] = this.createSpan("", parent);
+        }
     }
 
     private createSpan(text: string, parent: HTMLElement) {
+        parent.appendChild(document.createElement('br'));
         var span = document.createElement("span");
         span.textContent = text;
         parent.appendChild(span);
         return span;
     }
 
-    setParameters(parameters: ParameterValues) {
-        let formatted = {
-            R_p: 'R<sub>p</sub>',
-            R_a: 'R<sub>a</sub>',
-            C_a: 'C<sub>a</sub>',
-            rate: 'Heart rate',
-            strokeVolume: 'Stroke volume',
-            co: 'Cardiac output',
-            map: 'MAP',
-            pp: 'Pulse pressure'
-        }
-        let decimalPoints = {
-            R_p: 3,
-            R_a: 3,
-            C_a: 3,
-            rate: 1,
-            strokeVolume: 1,
-            co: 2,
-            map: 1,
-            pp: 1
-        }
-        for (var param in parameters) {
-            if (param === 'pressureString') {
-                this.parameterLabels[param].innerHTML = parameters[param];
-                break;
-            }
-            this.parameterLabels[param].innerHTML = formatted[param] + ': ' + 
-                Math.round(parameters[param].value*10**decimalPoints[param])/10**decimalPoints[param] + 
-                ' ' + parameters[param].unit;
+    setParameters(parameters: { [id: number]: ParameterSummary }) {
+        var param: any;
+        for (param in Object.values(PARAM)) {
+            let summary = parameters[param];
+            this.parameterLabels[param].innerHTML = summary.name + ' = ' + summary.value;
         }
     }
 

@@ -1,18 +1,18 @@
 import { Disease } from './Disease.js';
 import { SummarisableParameter } from './SummarisableParameter.js';
 
-export enum PARAM {
-    R_p,
-    R_a,
-    C_a,
-    rate,
-    systoleLength,
-    dicroticLength,
-    dicroticPeakFlow,
-    aorticBackflow,
-    msfp,
-    rvr,
-    maxStrokeVolume
+export const PARAM = {
+    R_p: 0,
+    R_a: 1,
+    C_a: 2,
+    rate: 3,
+    systoleLength: 4,
+    dicroticLength: 5,
+    dicroticPeakFlow: 6,
+    aorticBackflow: 7,
+    msfp: 8,
+    rvr: 9,
+    maxStrokeVolume: 10
 }
 
 const baseValues = {
@@ -43,21 +43,36 @@ const units = {
     [PARAM.maxStrokeVolume]: 'ml'
 }
 
+const formattedNames = {
+    [PARAM.R_p]: 'R<sub>p</sub>',
+    [PARAM.R_a]: 'R<sub>a</sub>',
+    [PARAM.C_a]: 'C<sub>a</sub>',
+    [PARAM.rate]: 'Heart rate',
+    [PARAM.systoleLength]: 'Systole length',
+    [PARAM.dicroticLength]: 'Dicrotic length',
+    [PARAM.dicroticPeakFlow]: 'Dicrotic peak flow',
+    [PARAM.aorticBackflow]: 'Aortic backflow',
+    [PARAM.msfp]: 'Mean systemic filling pressure',
+    [PARAM.rvr]: 'Resistance to venous return',
+    [PARAM.maxStrokeVolume]: 'Maximum stroke volume'
+}
+
 export class CirculatoryParameters {
 
     private parameters: { [id: number]: SummarisableParameter };
 
     constructor() {
         this.parameters = {}
-        for (var param in PARAM) {
+        for (const param of Object.values(PARAM)) {
             this.parameters[param] = new SummarisableParameter(baseValues[param]);
             this.parameters[param].setUnit(units[param]);
+            this.parameters[param].setFormattedName(formattedNames[param]);
         }
     }
 
     applyDiseases(diseases: Disease[]) {
         var param: any;
-        for (param in PARAM) { // for each parameter
+        for (param in Object.values(PARAM)) { // for each parameter
             var factors = [];
             var diseaseNames = [];
             for (var i=0; i<diseases.length; i++) { // for each disease
@@ -67,16 +82,16 @@ export class CirculatoryParameters {
                     diseaseNames.push(diseases[i].getName());
                 }
             }
-            this.getParameter(<PARAM>param).setDiseaseFactors(factors);
-            this.getParameter(<PARAM>param).setDiseaseFactorExplanations(diseaseNames);
+            this.getParameter(param).setDiseaseFactors(factors);
+            this.getParameter(param).setDiseaseFactorExplanations(diseaseNames);
         }
     }
 
-    getParameter(id: PARAM) {
+    getParameter(id) {
         return this.parameters[id];
     }
 
-    getValue(id: PARAM) {
+    getValue(id) {
         return this.parameters[id].getValue();
     }
 
