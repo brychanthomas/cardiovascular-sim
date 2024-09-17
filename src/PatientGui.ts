@@ -44,14 +44,14 @@ export class PatientGui {
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
-        this.createSpan("Exercise intensity: ", parent);
+        this.createSpan("Exercise intensity: ", parent, true);
         var slider = document.createElement("input");
         slider.setAttribute("max", "100");
         slider.setAttribute("min", "0");
         slider.setAttribute("type", "range");
         slider.setAttribute("value", "0");
         parent.appendChild(slider);
-        var sliderLabel = this.createSpan('0%', parent);
+        var sliderLabel = this.createSpan('0%', parent, true);
         slider.addEventListener("input", function() {
             sliderLabel.textContent = slider.value + '%';
         });
@@ -67,8 +67,10 @@ export class PatientGui {
         }
     }
 
-    private createSpan(text: string, parent: HTMLElement) {
-        parent.appendChild(document.createElement('br'));
+    private createSpan(text: string, parent: HTMLElement, noBr?: boolean) {
+        if (!noBr) {
+            parent.appendChild(document.createElement('br'));
+        }
         var span = document.createElement("span");
         span.textContent = text;
         parent.appendChild(span);
