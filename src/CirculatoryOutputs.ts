@@ -1,4 +1,4 @@
-import { OutputValue, OutputValueSummary } from './OutputValue.js';
+import { Output, OutputSummary } from './Output.js';
 
 export const OUT = {
     strokeVolume: 0,
@@ -36,13 +36,13 @@ const descriptions = {
     [OUT.co]: 'Cardiac output'
 }
 
-export class CirculatoryOutputValues {
+export class CirculatoryOutputs {
 
-    private values: { [id: number]: OutputValue } = {};
+    private values: { [id: number]: Output } = {};
 
     constructor() {
         for (var val of Object.values(OUT)) {
-            this.values[val] = new OutputValue(formattedNames[val], descriptions[val], units[val])
+            this.values[val] = new Output(formattedNames[val], descriptions[val], units[val])
         }
     }
 
@@ -50,7 +50,7 @@ export class CirculatoryOutputValues {
         this.values[id].setValue(value);
     }
 
-    getSummary(id: number): OutputValueSummary {
+    getSummary(id: number): OutputSummary {
         return this.values[id].getSummary();
     }
 

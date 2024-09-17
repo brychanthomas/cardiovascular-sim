@@ -1,10 +1,10 @@
-export interface OutputValueSummary {
+export interface OutputSummary {
     name: string,
     description: string,
     value: string
 }
 
-export class OutputValue {
+export class Output {
 
     private value: number;
     private formattedName: string;
@@ -21,7 +21,7 @@ export class OutputValue {
         this.value = val;
     }
 
-    getSummary (): OutputValueSummary {
+    getSummary (): OutputSummary {
         return {
             value: this.value.toPrecision(3) + ' ' + this.unit,
             name: this.formattedName,
