@@ -99,11 +99,6 @@ export class CirculatorySystem {
      * @returns object of raw parameter values
      */
     getParameterSummaries() {
-        var summaries = {};
-        var param: any;
-        for (param in Object.values(PARAM)) {
-            summaries[param] = this.parameters.getParameter(param).getSummary();
-        }
-        return summaries;
+        return this.parameters.getAllParameterSummaries();
     }
 }

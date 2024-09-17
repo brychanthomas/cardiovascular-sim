@@ -1,5 +1,5 @@
 import { Disease } from './Disease.js';
-import { SummarisableParameter } from './SummarisableParameter.js';
+import { ParameterSummary, SummarisableParameter } from './SummarisableParameter.js';
 
 export const PARAM = {
     R_p: 0,
@@ -102,12 +102,21 @@ export class CirculatoryParameters {
         }
     }
 
-    getParameter(id) {
+    getParameter(id: number) {
         return this.parameters[id];
     }
 
-    getValue(id) {
+    getValue(id: number) {
         return this.parameters[id].getValue();
+    }
+
+    getAllParameterSummaries() {
+        var summaries: {[id: number]: ParameterSummary} = {};
+        var param: any;
+        for (param in Object.values(PARAM)) {
+            summaries[param] = this.getParameter(param).getSummary();
+        }
+        return summaries;
     }
 
 }
