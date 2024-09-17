@@ -47,14 +47,28 @@ const formattedNames = {
     [PARAM.R_p]: 'R<sub>p</sub>',
     [PARAM.R_a]: 'R<sub>a</sub>',
     [PARAM.C_a]: 'C<sub>a</sub>',
-    [PARAM.rate]: 'Heart rate',
-    [PARAM.systoleLength]: 'Systole length',
-    [PARAM.dicroticLength]: 'Dicrotic length',
+    [PARAM.rate]: 'HR',
+    [PARAM.systoleLength]: 'T<sub>systole</sub>',
+    [PARAM.dicroticLength]: 'T<sub>dicrotic</sub>',
     [PARAM.dicroticPeakFlow]: 'Dicrotic peak flow',
     [PARAM.aorticBackflow]: 'Aortic backflow',
+    [PARAM.msfp]: 'MSFP',
+    [PARAM.rvr]: 'RVR',
+    [PARAM.maxStrokeVolume]: 'SV<sub>max</sub>'
+}
+
+const descriptions = {
+    [PARAM.R_p]: 'Peripheral resistance',
+    [PARAM.R_a]: 'Resistance of proximal arteries',
+    [PARAM.C_a]: 'Capacitance of proximal arteries',
+    [PARAM.rate]: 'Heart rate',
+    [PARAM.systoleLength]: 'Length of mechanical systole',
+    [PARAM.dicroticLength]: 'Time aortic valve takes to close after pressure gradient reverses',
+    [PARAM.dicroticPeakFlow]: 'Peak reverse flow before aortic valve closes',
+    [PARAM.aorticBackflow]: 'Constant reverse flow due to imperfect closing of aortic valve',
     [PARAM.msfp]: 'Mean systemic filling pressure',
     [PARAM.rvr]: 'Resistance to venous return',
-    [PARAM.maxStrokeVolume]: 'Maximum stroke volume'
+    [PARAM.maxStrokeVolume]: 'Maximum achievable stroke volume'
 }
 
 export class CirculatoryParameters {
@@ -67,6 +81,7 @@ export class CirculatoryParameters {
             this.parameters[param] = new SummarisableParameter(baseValues[param]);
             this.parameters[param].setUnit(units[param]);
             this.parameters[param].setFormattedName(formattedNames[param]);
+            this.parameters[param].setDescription(descriptions[param]);
         }
     }
 
