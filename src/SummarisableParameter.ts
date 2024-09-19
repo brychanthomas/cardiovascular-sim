@@ -7,7 +7,7 @@ export interface ParameterSummary {
     value: string,
     exerciseFactor: string,
     baroreflexFactor: string,
-    diseaseFactors: string
+    diseaseFactors: string[]
 }
 
 export class SummarisableParameter extends Parameter {
@@ -44,9 +44,9 @@ export class SummarisableParameter extends Parameter {
     }
 
     getSummary(): ParameterSummary {
-        var diseaseFactorText = '';
+        var diseaseFactors = [];
         for (var i = 0; i<this.diseaseFactorExplanations.length; i++) {
-            diseaseFactorText += this.diseaseFactors[i] + 'x - ' + this.diseaseFactorExplanations[i] + '<br>';
+            diseaseFactors.push(this.diseaseFactors[i] + 'x - ' + this.diseaseFactorExplanations[i]);
         }
         return {
             name: this.formattedName,
@@ -55,7 +55,7 @@ export class SummarisableParameter extends Parameter {
             value: this.getValue().toPrecision(3) + ' ' + this.unit,
             exerciseFactor: (this.round(this.exerciseFactor) === 1) ? '' : this.round(this.exerciseFactor) + 'x - ' + this.exerciseFactorExplanation,
             baroreflexFactor: (this.round(this.baroreflexFactor) === 1) ? '' : this.round(this.baroreflexFactor) + 'x - ' + this.baroreflexFactorExplanation,
-            diseaseFactors: diseaseFactorText
+            diseaseFactors: diseaseFactors
         }
     }
 

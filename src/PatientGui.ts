@@ -16,6 +16,7 @@ export class PatientGui {
     private flowGraph: Graph;
     private intervalId: number = -1;
     private valueLabels: HTMLElementStore = {};
+    private hoverBoxes: HTMLElementStore = {};
     private time = 0;
 
     constructor(patientRerunCallback:(e:number)=>void) {
@@ -70,8 +71,14 @@ export class PatientGui {
             var isFirstInBox = true;
             for (var id of group.valueIds) {
                 this.valueLabels[id] = this.createSpan("", box, isFirstInBox);
-                if (id < 1000) { this.valueLabels[id].style.color = "cyan"; }
-                else { this.valueLabels[id].style.color = "yellow"; }
+                if (id < 1000) { 
+                    this.valueLabels[id].style.color = "cyan";
+                    this.hoverBoxes[id] = this.createHoverBox(box, this.valueLabels[id], '#dce0f4');
+                 }
+                else { 
+                    this.valueLabels[id].style.color = "yellow";
+                    this.hoverBoxes[id] = this.createHoverBox(box, this.valueLabels[id], '#f5f5dc');
+                 }
                 isFirstInBox = false;
             }
 
@@ -97,20 +104,55 @@ export class PatientGui {
         return div;
     }
 
+    private createHoverBox(parent: HTMLElement, hoverText: HTMLSpanElement, colour: string) {
+        var box = document.createElement("div");
+        box.classList.add("hoverBox");
+        box.style.backgroundColor = colour;
+        hoverText.onmousemove = function (e) {
+            box.style.display = "block";
+            box.style.left = e.clientX + 'px';
+            box.style.top = e.clientY + 5 + 'px';
+        }
+        hoverText.onmouseleave = function() {
+            box.style.display = "none";
+        }
+        parent.appendChild(box);
+        return box;
+    }
+
     setValues(parameters: { [id: number]: ParameterSummary }, outputs: { [id: number]: OutputSummary }) {
         for (var idStr of Object.keys(this.valueLabels)) {
             var id = Number(idStr)
             if (id < 1000) { //parameter
                 let summary = parameters[id];
                 this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
+                this.hoverBoxes[id].innerHTML = this.parameterSummaryToText(summary);
             } else { //output
                 let summary = outputs[id-1000];
                 this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
-                //check if RAP actually = 0 before doing this
                 if (id === OUT.rap+1000 && summary.value === '0.00 mmHg') { this.valueLabels[id].innerHTML = 'RAP ≈ 0 mmHg' }
+                this.hoverBoxes[id].innerHTML = summary.description;
             }
             
         }
+    }
+
+    private parameterSummaryToText(s: ParameterSummary) {
+        console.log(s);
+        var text = `<span><b>${s.description}</b></span><br>
+                    <span>Base value: ${s.base}</span><br><hr>`;
+        var modifiers = [];
+        if (s.exerciseFactor) { modifiers.push(s.exerciseFactor); }
+        if (s.baroreflexFactor) { modifiers.push(s.baroreflexFactor); }
+        modifiers = modifiers.concat(s.diseaseFactors);
+        if (modifiers.length>0) {
+            text += '<span>';
+            text += modifiers.join("</span><br><span>");
+            text += '</span>'
+        } else {
+            text += '<span>No modifiers</span>'
+        }
+        return text;
     }
 
     setGraphSequences(pressures: RepeatingTimeSequence, flows: RepeatingTimeSequence) {
