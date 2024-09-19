@@ -62,4 +62,8 @@ export class Patient {
     getCirculatoryParameterSummaries() {
         return this.circulation.getParameterSummaries();
     }
+
+    getCirculatoryOutputSummaries() {
+        return this.circulation.getOutputSummaries();
+    }
 }

@@ -1,7 +1,9 @@
 import { Graph } from './Graph.js';
 import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
-import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
+import { PARAM } from './CirculatoryParameters.js';
 import { ParameterSummary } from './SummarisableParameter.js';
+import { OUT } from './CirculatoryOutputs.js';
+import { OutputSummary } from './Output.js';
 
 
 interface HTMLElementStore {
@@ -13,8 +15,8 @@ export class PatientGui {
     private pressureGraph: Graph;
     private flowGraph: Graph;
     private intervalId: number = -1;
+    private valueLabels: HTMLElementStore = {};
     private time = 0;
-    private parameterLabels: HTMLElementStore = {};
 
     constructor(patientRerunCallback:(e:number)=>void) {
         var wrapper = document.createElement("div");
@@ -27,7 +29,7 @@ export class PatientGui {
         wrapper.appendChild(rightDiv);
 
         this.initExerciseSlider(rightDiv, patientRerunCallback);
-        this.initParameterText(rightDiv);
+        this.initValueLabels(rightDiv);
     }
 
     private initCanvas(parent: HTMLElement) {
@@ -61,9 +63,48 @@ export class PatientGui {
         parent.appendChild(document.createElement('br'));
     }
 
-    private initParameterText(parent: HTMLElement) {
-        for (var param in Object.values(PARAM)) {
-            this.parameterLabels[param] = this.createSpan("", parent);
+    private initValueLabels(parent: HTMLElement) {
+        //parameter has its normal ID, output has +1000
+        var grouping = [{
+            name: 'Pressures',
+            valueIds: [
+                    OUT.systolicPressure +1000,
+                    OUT.diastolicPressure +1000,
+                    OUT.map +1000,
+                    OUT.rap +1000,
+                    PARAM.msfp
+            ]
+        },
+        {
+            name: 'Cardiac properties',
+            valueIds: [
+                PARAM.rate,
+                OUT.strokeVolume +1000,
+                OUT.co +1000,
+                PARAM.systoleLength,
+                PARAM.aorticBackflow,
+                PARAM.dicroticLength
+            ]
+        },
+        {
+            name: 'Vasculature properties',
+            valueIds: [
+                PARAM.R_p,
+                PARAM.R_a,
+                PARAM.C_a,
+                PARAM.rvr,
+            ]
+        }];
+        for (var group of grouping) {
+            var box = this.createGroupBox(parent, group.name);
+            var isFirstInBox = true;
+            for (var id of group.valueIds) {
+                this.valueLabels[id] = this.createSpan("", box, isFirstInBox);
+                if (id < 1000) { this.valueLabels[id].style.color = "cyan"; }
+                else { this.valueLabels[id].style.color = "yellow"; }
+                isFirstInBox = false;
+            }
+
         }
     }
 
@@ -77,11 +118,28 @@ export class PatientGui {
         return span;
     }
 
-    setParameters(parameters: { [id: number]: ParameterSummary }) {
-        var param: any;
-        for (param in Object.values(PARAM)) {
-            let summary = parameters[param];
-            this.parameterLabels[param].innerHTML = summary.name + ' = ' + summary.value;
+    private createGroupBox(parent: HTMLElement, title: string) {
+        var div = document.createElement("div");
+        div.classList.add("groupingBox");
+        parent.appendChild(div);
+        var titleSpan = this.createSpan(title, div, true);
+        titleSpan.classList.add("groupingBoxTitle");
+        return div;
+    }
+
+    setValues(parameters: { [id: number]: ParameterSummary }, outputs: { [id: number]: OutputSummary }) {
+        for (var idStr of Object.keys(this.valueLabels)) {
+            var id = Number(idStr)
+            if (id < 1000) { //parameter
+                let summary = parameters[id];
+                this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
+            } else { //output
+                let summary = outputs[id-1000];
+                this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
+                //check if RAP actually = 0 before doing this
+                if (id === OUT.rap+1000 && summary.value === '0.00 mmHg') { this.valueLabels[id].innerHTML = 'RAP ≈ 0 mmHg' }
+            }
+            
         }
     }
 
