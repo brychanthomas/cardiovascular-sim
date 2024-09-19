@@ -65,6 +65,7 @@ export class Graph {
         this.context.font = "13px Arial";
         this.context.fillStyle = "white";
         this.context.strokeStyle = "white";
+        this.context.textAlign = 'center';
 
         this.context.clearRect(this.basex-40, this.basey-15, 40, this.height+30);
         this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
@@ -87,8 +88,7 @@ export class Graph {
             this.context.moveTo(this.basex+i*this.width/this.timespan, this.basey+this.height);
             this.context.lineTo(this.basex+i*this.width/this.timespan, this.basey+this.height+5);
             this.context.stroke();
-            let xOffset = String(i-this.timespan).length * 4
-            this.context.fillText(String(i-this.timespan), this.basex+i*this.width/this.timespan-xOffset, this.basey+this.height+20);
+            this.context.fillText(String(i-this.timespan), this.basex+i*this.width/this.timespan, this.basey+this.height+20);
         }
     }
 
