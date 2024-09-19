@@ -24,7 +24,7 @@ const baseValues = {
     [PARAM.dicroticLength]: 0.05,  // s
     [PARAM.dicroticPeakFlow]: 100, // mL/s
     [PARAM.aorticBackflow]: -0.1,  // mL/s
-    [PARAM.msfp]: 7,               // mmHg
+    [PARAM.msfp]: 7.2,               // mmHg
     [PARAM.rvr]: 7/5000,           // mmHg s/mL
     [PARAM.maxStrokeVolume]: 125   // ml
 }
