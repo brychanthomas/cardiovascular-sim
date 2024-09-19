@@ -65,37 +65,7 @@ export class PatientGui {
 
     private initValueLabels(parent: HTMLElement) {
         //parameter has its normal ID, output has +1000
-        var grouping = [{
-            name: 'Pressures',
-            valueIds: [
-                    OUT.systolicPressure +1000,
-                    OUT.diastolicPressure +1000,
-                    OUT.map +1000,
-                    OUT.rap +1000,
-                    PARAM.msfp
-            ]
-        },
-        {
-            name: 'Cardiac properties',
-            valueIds: [
-                PARAM.rate,
-                OUT.strokeVolume +1000,
-                OUT.co +1000,
-                PARAM.systoleLength,
-                PARAM.aorticBackflow,
-                PARAM.dicroticLength
-            ]
-        },
-        {
-            name: 'Vasculature properties',
-            valueIds: [
-                PARAM.R_p,
-                PARAM.R_a,
-                PARAM.C_a,
-                PARAM.rvr,
-            ]
-        }];
-        for (var group of grouping) {
+        for (var group of valueGrouping) {
             var box = this.createGroupBox(parent, group.name);
             var isFirstInBox = true;
             for (var id of group.valueIds) {
@@ -168,3 +138,35 @@ export class PatientGui {
     }
 
 }
+
+const valueGrouping = [{
+    name: 'Pressures',
+    valueIds: [
+            OUT.systolicPressure +1000,
+            OUT.diastolicPressure +1000,
+            OUT.pp +1000,
+            OUT.map +1000,
+            OUT.rap +1000,
+            PARAM.msfp
+    ]
+},
+{
+    name: 'Cardiac properties',
+    valueIds: [
+        PARAM.rate,
+        OUT.strokeVolume +1000,
+        OUT.co +1000,
+        PARAM.systoleLength,
+        PARAM.aorticBackflow,
+        PARAM.dicroticLength
+    ]
+},
+{
+    name: 'Vasculature properties',
+    valueIds: [
+        PARAM.R_p,
+        PARAM.R_a,
+        PARAM.C_a,
+        PARAM.rvr,
+    ]
+}];

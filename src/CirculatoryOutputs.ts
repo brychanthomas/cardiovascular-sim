@@ -6,7 +6,8 @@ export const OUT = {
     diastolicPressure: 2,
     systolicPressure: 3,
     map: 4,
-    co: 5
+    co: 5,
+    pp: 6
 }
 
 const units = {
@@ -15,7 +16,8 @@ const units = {
     [OUT.diastolicPressure]: 'mmHg',
     [OUT.systolicPressure]: 'mmHg',
     [OUT.map]: 'mmHg',
-    [OUT.co]: 'L/min'
+    [OUT.co]: 'L/min',
+    [OUT.pp]: 'mmHg'
 }
 
 const formattedNames = {
@@ -24,7 +26,8 @@ const formattedNames = {
     [OUT.diastolicPressure]: 'P<sub>dia</sub>',
     [OUT.systolicPressure]: 'P<sub>sys</sub>',
     [OUT.map]: 'MAP',
-    [OUT.co]: 'CO'
+    [OUT.co]: 'CO',
+    [OUT.pp]: 'PP'
 }
 
 const descriptions = {
@@ -33,7 +36,8 @@ const descriptions = {
     [OUT.diastolicPressure]: 'Minimum pressure in the aorta',
     [OUT.systolicPressure]: 'Maximum pressure in the aorta',
     [OUT.map]: 'Mean arterial pressure',
-    [OUT.co]: 'Cardiac output'
+    [OUT.co]: 'Cardiac output',
+    [OUT.pp]: 'Pulse pressure: P<sub>sys</sub> - P<sub>dia</sub>'
 }
 
 export class CirculatoryOutputs {

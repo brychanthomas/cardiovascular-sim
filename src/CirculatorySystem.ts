@@ -114,8 +114,9 @@ export class CirculatorySystem {
         this.outputs.setValue(OUT.map, this.getMAP());
         this.outputs.setValue(OUT.diastolicPressure, this.getDiastolicPressure());
         this.outputs.setValue(OUT.systolicPressure, this.getSystolicPressure());
-        this.outputs.setValue(OUT.rap, this.heart.getRap());
+        this.outputs.setValue(OUT.rap, this.heart.getRAP());
         this.outputs.setValue(OUT.strokeVolume, this.heart.getStrokeVolume());
+        this.outputs.setValue(OUT.pp, this.getPP());
     }
 
     getOutputSummaries() {

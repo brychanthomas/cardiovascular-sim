@@ -54,7 +54,7 @@ export class Heart {
         this.aorticBackflow = params.getValue(PARAM.aorticBackflow);
     }
 
-    getRap() {
+    getRAP() {
         return this.rap;
     }
 }
