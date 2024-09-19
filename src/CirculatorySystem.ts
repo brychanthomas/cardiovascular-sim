@@ -2,6 +2,7 @@ import { Heart } from './Heart.js';
 import { Vasculature } from './Vasculature.js';
 import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
 import { PARAM, CirculatoryParameters } from './CirculatoryParameters.js';
+import { OUT, CirculatoryOutputs } from './CirculatoryOutputs.js';
 
 export class CirculatorySystem {
 
@@ -12,7 +13,9 @@ export class CirculatorySystem {
     private aortapressureseq: number[];
 
     private baroreflexSetPoint = 93;
+
     private parameters = new CirculatoryParameters();
+    private outputs = new CirculatoryOutputs();
 
     evaluatePressures() {
         let timespan = 10;
@@ -78,6 +81,14 @@ export class CirculatorySystem {
         return systolic+'/'+diastolic;
     }
 
+    getDiastolicPressure() {
+        return Math.round(Math.min(...this.aortapressureseq));
+    }
+
+    getSystolicPressure() {
+        return Math.round(Math.max(...this.aortapressureseq));
+    }
+
     getMAP() {
         return this.aortapressureseq.reduce((a, b) => a + b) / this.aortapressureseq.length;
     }
@@ -94,11 +105,21 @@ export class CirculatorySystem {
         this.parameters = pf;
     }
 
-    /**
-     * Get raw values of all circulatory parameters
-     * @returns object of raw parameter values
-     */
     getParameterSummaries() {
         return this.parameters.getAllParameterSummaries();
+    }
+
+    updateOutputs() {
+        this.outputs.setValue(OUT.co, this.heart.getCardiacOutput());
+        this.outputs.setValue(OUT.map, this.getMAP());
+        this.outputs.setValue(OUT.diastolicPressure, this.getDiastolicPressure());
+        this.outputs.setValue(OUT.systolicPressure, this.getSystolicPressure());
+        this.outputs.setValue(OUT.rap, this.heart.getRap());
+        this.outputs.setValue(OUT.strokeVolume, this.heart.getStrokeVolume());
+    }
+
+    getOutputSummaries() {
+        this.updateOutputs();
+        return this.outputs.getAllOutputSummaries();
     }
 }

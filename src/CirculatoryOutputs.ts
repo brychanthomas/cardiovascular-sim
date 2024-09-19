@@ -54,4 +54,13 @@ export class CirculatoryOutputs {
         return this.values[id].getSummary();
     }
 
+    getAllOutputSummaries() {
+        var summaries: { [id: number]: OutputSummary } = {};
+        var param: any;
+        for (param in Object.values(OUT)) {
+            summaries[param] = this.getSummary(param);
+        }
+        return summaries;
+    }
+
 }
