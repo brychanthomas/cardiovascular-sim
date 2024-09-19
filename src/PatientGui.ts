@@ -131,24 +131,23 @@ export class PatientGui {
                 let summary = outputs[id-1000];
                 this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
                 if (id === OUT.rap+1000 && summary.value === '0.00 mmHg') { this.valueLabels[id].innerHTML = 'RAP ≈ 0 mmHg' }
-                this.hoverBoxes[id].innerHTML = summary.description;
+                this.hoverBoxes[id].innerHTML = `<span><b>${summary.description}</b> (output)</span>`;
             }
             
         }
     }
 
     private parameterSummaryToText(s: ParameterSummary) {
-        console.log(s);
-        var text = `<span><b>${s.description}</b></span><br>
+        var text = `<span><b>${s.description}</b> (input)</span><br>
                     <span>Base value: ${s.base}</span><br><hr>`;
         var modifiers = [];
         if (s.exerciseFactor) { modifiers.push(s.exerciseFactor); }
         if (s.baroreflexFactor) { modifiers.push(s.baroreflexFactor); }
         modifiers = modifiers.concat(s.diseaseFactors);
         if (modifiers.length>0) {
-            text += '<span>';
-            text += modifiers.join("</span><br><span>");
-            text += '</span>'
+            text += '<ul><li><span>';
+            text += modifiers.join("</span></li><li><span>");
+            text += '</span></li></ul>'
         } else {
             text += '<span>No modifiers</span>'
         }
