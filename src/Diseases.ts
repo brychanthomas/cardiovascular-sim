@@ -1,20 +1,25 @@
-import { PARAM } from './CirculatoryParameters.js';
-import { Disease } from './Disease.js';
+import { Disease, Atherosclerosis, AorticRegurguitation } from './Disease.js';
 
-export class Atherosclerosis extends Disease {
-    parameterFactors = {
-        [PARAM.C_a]: 0.7,
-        [PARAM.R_a]: 1.2,
-        [PARAM.R_p]: 1.2
+export class Diseases {
+
+    private static diseases: { [id: string]: Disease } = {
+        'Atherosclerosis': new Atherosclerosis(),
+        'Aortic regurguitation': new AorticRegurguitation()
     }
 
-    getName() { return "Atherosclerosis" }
-}
-
-export class AorticRegurguitation extends Disease {
-    parameterFactors = {
-        [PARAM.aorticBackflow]: 400
+    static getAllDiseaseNames() {
+        return Object.keys(this.diseases);
     }
 
-    getName() { return "Aortic regurguitation" }
+    static getDiseaseFromName(name: string) {
+        return this.diseases[name];
+    }
+
+    static getDiseaseListFromNameList(names: string[]) {
+        var diseases: Disease[] = [];
+        for (var name of names) {
+            diseases.push(this.getDiseaseFromName(name));
+        }
+        return diseases;
+    }
 }

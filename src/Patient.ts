@@ -1,7 +1,7 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
 import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
-import { AorticRegurguitation, Atherosclerosis } from './Diseases.js';
+import { AorticRegurguitation, Atherosclerosis } from './Disease.js';
 
 interface Parameter {
     value: number,
@@ -67,5 +67,9 @@ export class Patient {
 
     getCirculatoryOutputSummaries() {
         return this.circulation.getOutputSummaries();
+    }
+
+    setDiseases(ds: Disease[]) {
+        this.diseases = ds;
     }
 }
