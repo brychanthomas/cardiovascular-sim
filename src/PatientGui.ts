@@ -18,6 +18,7 @@ export class PatientGui {
     private valueLabels: HTMLElementStore = {};
     private hoverBoxes: HTMLElementStore = {};
     private time = 0;
+    private paused = false;
 
     constructor(patientRerunCallback:(e:number)=>void) {
         var wrapper = document.createElement("div");
@@ -36,18 +37,20 @@ export class PatientGui {
     private initCanvas(parent: HTMLElement) {
         var div = document.createElement("div");
         var canvas = document.createElement("canvas");
-        canvas.classList.add("leftFloat");
+        div.classList.add("leftFloat");
         div.appendChild(canvas);
         parent.appendChild(div);
         
         var ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
         ctx.canvas.width  = window.innerWidth/2;
-        ctx.canvas.height = window.innerHeight;
+        ctx.canvas.height = window.innerHeight - 50;
 
         this.pressureGraph = new Graph(canvas, 60, 10, ctx.canvas.width - 100, 200, 5);
         this.pressureGraph.setYLabel("Aortic pressure (mmHg)");
         this.flowGraph = new Graph(canvas, 60, 310, ctx.canvas.width - 100, 200, 5);
         this.flowGraph.setYLabel("Aortic valve flow (mL/s)");
+
+        this.createPauseButton(div);
 
     }
 
@@ -167,18 +170,31 @@ export class PatientGui {
         this.flowGraph.clearValues();
         this.time = 0;
         this.intervalId = setInterval(function(){
-            let [t, p] = pressures.getNextValue();
-            while (t < this.time) {
-                this.pressureGraph.addValue(t, p);
-                pressures.popNextValue();
-                let [t1, q] = flows.popNextValue();
-                this.flowGraph.addValue(t1, q);
-                [t, p] = pressures.getNextValue();
+            if (!this.paused) {
+                let [t, p] = pressures.getNextValue();
+                while (t < this.time) {
+                    this.pressureGraph.addValue(t, p);
+                    pressures.popNextValue();
+                    let [t1, q] = flows.popNextValue();
+                    this.flowGraph.addValue(t1, q);
+                    [t, p] = pressures.getNextValue();
+                }
+                this.time += 0.050;
+                this.pressureGraph.drawValues();
+                this.flowGraph.drawValues();
             }
-            this.time += 0.050;
-            this.pressureGraph.drawValues();
-            this.flowGraph.drawValues();
         }.bind(this), 50);
+    }
+
+    private createPauseButton(parent: HTMLElement) {
+        var button = document.createElement("button");
+        button.textContent = 'Pause';
+        button.classList.add('pauseButton');
+        parent.appendChild(button);
+        button.onclick = function() {
+            this.paused = !this.paused;
+            button.textContent = this.paused ? 'Play': 'Pause';
+        }.bind(this);
     }
 
 }
