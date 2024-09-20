@@ -21,7 +21,7 @@ export class Graph {
         this.timespan = timespan;
         this.clearValues();
 
-        this.drawLabels();
+        this.drawTicksAndLabels();
         this.drawAxes();
         this.initTimePeriodSelect(canvas);
     }
@@ -68,14 +68,19 @@ export class Graph {
         }
     }
 
-    drawLabels() {
+    drawTicksAndLabels() {
+        this.context.clearRect(this.basex-50, this.basey-15, 50, this.height+30);
+        this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
+        this.drawYLabel();
+        this.drawYTicks();
+        this.drawXTicks();
+    }
+
+    private drawYTicks() {
         this.context.font = "13px Arial";
         this.context.fillStyle = "white";
         this.context.strokeStyle = "white";
         this.context.textAlign = "right";
-
-        this.context.clearRect(this.basex-50, this.basey-15, 50, this.height+30);
-        this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
 
         this.line(this.basex, this.valtoy(this.maxval), this.basex-5, this.valtoy(this.maxval));
         this.context.fillText(String(this.maxval), this.basex-10, this.valtoy(this.maxval)+5);
@@ -87,16 +92,22 @@ export class Graph {
             this.line(this.basex, this.valtoy(0), this.basex-5, this.valtoy(0));
             this.context.fillText("0", this.basex-10, this.valtoy(0)+5);
         }
+    }
 
+    private drawXTicks() {
         this.context.textAlign = "center";
-        for (let i = 0; i<=this.timespan; i++) {
+        var increment = (this.timespan % 2 === 0) ? 2 : 1;
+
+        for (let i = 0; i<=this.timespan; i+=increment) {
             this.context.beginPath();
             this.context.moveTo(this.basex+i*this.width/this.timespan, this.basey+this.height);
             this.context.lineTo(this.basex+i*this.width/this.timespan, this.basey+this.height+5);
             this.context.stroke();
             this.context.fillText(String(i-this.timespan), this.basex+i*this.width/this.timespan, this.basey+this.height+20);
         }
+    }
 
+    private drawYLabel() {
         if (this.ylabel) {
             this.context.font = "16px Arial";
             this.context.textAlign = "center";
@@ -113,10 +124,10 @@ export class Graph {
         this.vs.push(v);
         if (v>this.maxval || this.maxval === null) {
             this.maxval = Math.ceil(v/10)*10;
-            this.drawLabels();
+            this.drawTicksAndLabels();
         } else if (v<this.minval || this.minval === null) {
             this.minval = Math.floor(v/10)*10;
-            this.drawLabels();
+            this.drawTicksAndLabels();
         }
         while (this.ts[0] < t-this.timespan) {
             this.ts.splice(0, 1);
@@ -164,7 +175,7 @@ export class Graph {
         select.value = '5';
         select.onchange = function () {
             this.timespan = options[select.selectedIndex];
-            this.drawLabels();
+            this.drawTicksAndLabels();
         }.bind(this);
     }
 
