@@ -1,6 +1,15 @@
 body {
     font-size: 1.2em;
     font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background-color:black;
+    margin:0px;
+ }
+
+ .timePeriodSelect {
+    position: absolute;
+    background-color: black;
+    color: white;
  }
 
 .leftFloat {

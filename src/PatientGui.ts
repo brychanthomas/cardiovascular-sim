@@ -34,18 +34,21 @@ export class PatientGui {
     }
 
     private initCanvas(parent: HTMLElement) {
+        var div = document.createElement("div");
         var canvas = document.createElement("canvas");
         canvas.classList.add("leftFloat");
-        parent.appendChild(canvas);
+        div.appendChild(canvas);
+        parent.appendChild(div);
         
         var ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
         ctx.canvas.width  = window.innerWidth/2;
         ctx.canvas.height = window.innerHeight;
 
-        this.pressureGraph = new Graph(ctx, 60, 10, ctx.canvas.width - 100, 200, 5);
+        this.pressureGraph = new Graph(canvas, 60, 10, ctx.canvas.width - 100, 200, 5);
         this.pressureGraph.setYLabel("Aortic pressure (mmHg)");
-        this.flowGraph = new Graph(ctx, 60, 310, ctx.canvas.width - 100, 200, 5);
+        this.flowGraph = new Graph(canvas, 60, 310, ctx.canvas.width - 100, 200, 5);
         this.flowGraph.setYLabel("Aortic valve flow (mL/s)");
+
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
@@ -164,19 +167,17 @@ export class PatientGui {
         this.flowGraph.clearValues();
         this.time = 0;
         this.intervalId = setInterval(function(){
-            if (this.time < 5) {
-                let [t, p] = pressures.getNextValue();
-                while (t < this.time) {
-                    this.pressureGraph.addValue(t, p);
-                    pressures.popNextValue();
-                    let [t1, q] = flows.popNextValue();
-                    this.flowGraph.addValue(t1, q);
-                    [t, p] = pressures.getNextValue();
-                }
-                this.time += 0.050;
-                this.pressureGraph.drawValues();
-                this.flowGraph.drawValues();
+            let [t, p] = pressures.getNextValue();
+            while (t < this.time) {
+                this.pressureGraph.addValue(t, p);
+                pressures.popNextValue();
+                let [t1, q] = flows.popNextValue();
+                this.flowGraph.addValue(t1, q);
+                [t, p] = pressures.getNextValue();
             }
+            this.time += 0.050;
+            this.pressureGraph.drawValues();
+            this.flowGraph.drawValues();
         }.bind(this), 50);
     }
 

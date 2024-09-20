@@ -12,8 +12,8 @@ export class Graph {
     private vs: number[];
     private ylabel: string;
 
-    constructor(ctx, basex, basey, width, height, timespan) {
-        this.context = ctx;
+    constructor(canvas: HTMLCanvasElement, basex, basey, width, height, timespan) {
+        this.context = canvas.getContext("2d");
         this.basex = basex;
         this.basey = basey;
         this.width = width;
@@ -23,6 +23,7 @@ export class Graph {
 
         this.drawLabels();
         this.drawAxes();
+        this.initTimePeriodSelect(canvas);
     }
 
     setYLabel(lbl: string) {
@@ -143,6 +144,28 @@ export class Graph {
         this.maxval = null;
         this.ts = [];
         this.vs = [];
+    }
+
+    private initTimePeriodSelect(canvas: HTMLElement) {
+        var options = [1, 3, 5, 10];
+        var div = canvas.parentElement;
+        var canvasPos = canvas.getBoundingClientRect();
+        var select = document.createElement("select");
+        select.classList.add("timePeriodSelect");
+        select.style.top = canvasPos.top + this.basey + this.height + 8 + 'px';
+        select.style.left = canvasPos.left + this.basex - 10 +'px';
+        div.appendChild(select);
+        for (var i = 0; i<options.length; i++) {
+            var option = document.createElement("option");
+            option.text = -options[i] + ' s';
+            option.value = String(options[i]);
+            select.appendChild(option);
+        }
+        select.value = '5';
+        select.onchange = function () {
+            this.timespan = options[select.selectedIndex];
+            this.drawLabels();
+        }.bind(this);
     }
 
 }
