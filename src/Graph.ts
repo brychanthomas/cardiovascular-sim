@@ -10,6 +10,7 @@ export class Graph {
     private maxval: number;
     private ts: number[];
     private vs: number[];
+    private ylabel: string;
 
     constructor(ctx, basex, basey, width, height, timespan) {
         this.context = ctx;
@@ -23,6 +24,11 @@ export class Graph {
         this.drawLabels();
         this.drawAxes();
     }
+
+    setYLabel(lbl: string) {
+        this.ylabel = lbl;
+    }
+
     /**
      * Draw a line from (x0, y0) to (x1, y1)
      * @param x0 
@@ -65,30 +71,39 @@ export class Graph {
         this.context.font = "13px Arial";
         this.context.fillStyle = "white";
         this.context.strokeStyle = "white";
-        this.context.textAlign = 'center';
+        this.context.textAlign = "right";
 
-        this.context.clearRect(this.basex-40, this.basey-15, 40, this.height+30);
+        this.context.clearRect(this.basex-50, this.basey-15, 50, this.height+30);
         this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
 
-        let xOffset = String(this.maxval).length*7 + 8;
         this.line(this.basex, this.valtoy(this.maxval), this.basex-5, this.valtoy(this.maxval));
-        this.context.fillText(String(this.maxval), this.basex-xOffset, this.valtoy(this.maxval)+5);
+        this.context.fillText(String(this.maxval), this.basex-10, this.valtoy(this.maxval)+5);
         if (this.minval != 0) {
-            let xOffset = String(this.minval).length*7 + 8;
             this.line(this.basex, this.valtoy(this.minval), this.basex-5, this.valtoy(this.minval));
-            this.context.fillText(String(this.minval), this.basex-xOffset, this.valtoy(this.minval)+5);
+            this.context.fillText(String(this.minval), this.basex-10, this.valtoy(this.minval)+5);
         }
         if (this.minval <= 0) {
             this.line(this.basex, this.valtoy(0), this.basex-5, this.valtoy(0));
-            this.context.fillText("0", this.basex-15, this.valtoy(0)+5);
+            this.context.fillText("0", this.basex-10, this.valtoy(0)+5);
         }
 
+        this.context.textAlign = "center";
         for (let i = 0; i<=this.timespan; i++) {
             this.context.beginPath();
             this.context.moveTo(this.basex+i*this.width/this.timespan, this.basey+this.height);
             this.context.lineTo(this.basex+i*this.width/this.timespan, this.basey+this.height+5);
             this.context.stroke();
             this.context.fillText(String(i-this.timespan), this.basex+i*this.width/this.timespan, this.basey+this.height+20);
+        }
+
+        if (this.ylabel) {
+            this.context.font = "16px Arial";
+            this.context.textAlign = "center";
+            this.context.save();
+            this.context.translate(this.basex - 35, this.basey + this.height/2);
+            this.context.rotate(-Math.PI/2);
+            this.context.fillText(this.ylabel, 0, 0);
+            this.context.restore();
         }
     }
 

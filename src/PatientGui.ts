@@ -43,7 +43,9 @@ export class PatientGui {
         ctx.canvas.height = window.innerHeight;
 
         this.pressureGraph = new Graph(ctx, 60, 10, ctx.canvas.width - 100, 200, 5);
+        this.pressureGraph.setYLabel("Aortic pressure (mmHg)");
         this.flowGraph = new Graph(ctx, 60, 310, ctx.canvas.width - 100, 200, 5);
+        this.flowGraph.setYLabel("Aortic valve flow (mL/s)");
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
