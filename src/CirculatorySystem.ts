@@ -33,9 +33,9 @@ export class CirculatorySystem {
         this.evaluatePressures();
         var map = this.getMAP();
         var reflex_coeff = 0;
-        var set_point = -1;
+        var set_point: number;
         let count = 0;
-        while(map < set_point-1 || map > set_point+1) {
+        do {
             set_point = this.baroreflexSetPoint + 6*reflex_coeff;
             if (map < set_point-1) {
                 if (reflex_coeff > 1) { break; }
@@ -59,8 +59,8 @@ export class CirculatorySystem {
                 alert("Baroreflex failed");
                 return;
             }
-        }
-        console.log(reflex_coeff);
+        } while (map < set_point-1 || map > set_point+1);
+        console.log('reflex_coeff:',reflex_coeff);
     }
 
     getAorticPressureSequence() {

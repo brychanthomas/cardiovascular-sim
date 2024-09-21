@@ -227,7 +227,7 @@ export class PatientGui {
                 var diseases: string[] = [];
                 for (var box of checkedBoxes) { diseases.push((<HTMLInputElement>box).value) }
                 patientDiseaseSetCallback(Diseases.getDiseaseListFromNameList(diseases));
-                patientRerunCallback(this.exerciseSlider.value);
+                patientRerunCallback(Number(this.exerciseSlider.value)/100);
             }.bind(this);
             label.appendChild(input);
             this.createSpan(disease, label, true);
