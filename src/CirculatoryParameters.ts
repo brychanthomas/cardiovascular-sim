@@ -12,7 +12,8 @@ export const PARAM = {
     aorticBackflow: 7,
     msfp: 8,
     rvr: 9,
-    maxStrokeVolume: 10
+    maxStrokeVolume: 10,
+    baroreflexSetPoint: 11
 }
 
 const baseValues = {
@@ -24,9 +25,10 @@ const baseValues = {
     [PARAM.dicroticLength]: 0.05,  // s
     [PARAM.dicroticPeakFlow]: 100, // mL/s
     [PARAM.aorticBackflow]: -0.1,  // mL/s
-    [PARAM.msfp]: 7.2,               // mmHg
+    [PARAM.msfp]: 7.2,             // mmHg
     [PARAM.rvr]: 7/5000,           // mmHg s/mL
-    [PARAM.maxStrokeVolume]: 125   // ml
+    [PARAM.maxStrokeVolume]: 125,  // ml
+    [PARAM.baroreflexSetPoint]: 93 // mmHg
 }
 
 const units = {
@@ -40,7 +42,8 @@ const units = {
     [PARAM.aorticBackflow]: 'mL/s',
     [PARAM.msfp]: 'mmHg',
     [PARAM.rvr]: 'mmHg s/mL',
-    [PARAM.maxStrokeVolume]: 'ml'
+    [PARAM.maxStrokeVolume]: 'ml',
+    [PARAM.baroreflexSetPoint]: 'mmHg'
 }
 
 const formattedNames = {
@@ -54,7 +57,8 @@ const formattedNames = {
     [PARAM.aorticBackflow]: 'Aortic backflow',
     [PARAM.msfp]: 'MSFP',
     [PARAM.rvr]: 'RVR',
-    [PARAM.maxStrokeVolume]: 'SV<sub>max</sub>'
+    [PARAM.maxStrokeVolume]: 'SV<sub>max</sub>',
+    [PARAM.baroreflexSetPoint]: 'SP'
 }
 
 const descriptions = {
@@ -68,7 +72,8 @@ const descriptions = {
     [PARAM.aorticBackflow]: 'Constant reverse flow due to imperfect closing of aortic valve',
     [PARAM.msfp]: 'Mean systemic filling pressure',
     [PARAM.rvr]: 'Resistance to venous return',
-    [PARAM.maxStrokeVolume]: 'Maximum achievable stroke volume'
+    [PARAM.maxStrokeVolume]: 'Maximum achievable stroke volume',
+    [PARAM.baroreflexSetPoint]: 'Baroreflex set point'
 }
 
 export class CirculatoryParameters {

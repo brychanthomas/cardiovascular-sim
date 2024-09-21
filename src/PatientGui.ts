@@ -250,6 +250,7 @@ const valueGrouping = [{
             OUT.diastolicPressure +1000,
             OUT.pp +1000,
             OUT.map +1000,
+            PARAM.baroreflexSetPoint,
             OUT.rap +1000,
             PARAM.msfp
     ]

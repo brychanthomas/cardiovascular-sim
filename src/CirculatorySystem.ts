@@ -12,8 +12,6 @@ export class CirculatorySystem {
     private aortatimeseq: number[];
     private aortapressureseq: number[];
 
-    private baroreflexSetPoint = 93;
-
     private parameters = new CirculatoryParameters();
     private outputs = new CirculatoryOutputs();
 
@@ -33,12 +31,10 @@ export class CirculatorySystem {
         this.evaluatePressures();
         var map = this.getMAP();
         var reflex_coeff = 0;
-        var set_point: number;
+        var set_point = this.parameters.getValue(PARAM.baroreflexSetPoint);
         let count = 0;
         do {
-            set_point = this.baroreflexSetPoint + 6*reflex_coeff;
             if (map < set_point-1) {
-                if (reflex_coeff > 1) { break; }
                 reflex_coeff += Math.min((set_point-map)*0.001, 0.1);
             } else if (map > set_point+1) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
@@ -56,9 +52,11 @@ export class CirculatorySystem {
             map = this.getMAP();
             count++;
             if (count > 200) {
-                alert("Baroreflex failed");
+                console.log("BAROREFLEX FAILED");
                 return;
             }
+            reflex_coeff = Math.min(reflex_coeff, 1);
+            reflex_coeff = Math.max(reflex_coeff, 0);
         } while (map < set_point-1 || map > set_point+1);
         console.log('reflex_coeff:',reflex_coeff);
     }
