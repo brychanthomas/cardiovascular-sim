@@ -51,9 +51,33 @@ ul {
     margin: 0em;
 }
 
-.pauseButton {
-    position: relative;
+#pauseButton {
+    display: inline;
+    position: absolute;
+    left: 20vw;
+}
+
+#diseasesButton {
+    display: inline;
+    position: absolute;
+    left: 30vw;
+}
+
+#diseaseWindow {
+    position: absolute;
+    top: 10vh;
+    left: 10vw;
+    height: 80vh;
+    width: 80vw;
+    z-index: 1;
+    background-color: rgb(255, 232, 232);
+    color: black;
+    display: none;
+    padding: 10px;
+}
+
+#diseasesCloseButton {
+    position: absolute;
     left: 50%;
-    bottom: 40px;
-    display: block;
+    bottom: 20px;
 }

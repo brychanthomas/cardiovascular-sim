@@ -4,7 +4,8 @@ import { PARAM } from './CirculatoryParameters.js';
 import { ParameterSummary } from './SummarisableParameter.js';
 import { OUT } from './CirculatoryOutputs.js';
 import { OutputSummary } from './Output.js';
-
+import { Diseases } from './Diseases.js';
+import type { Disease } from './Disease.js';
 
 interface HTMLElementStore {
     [key: string]: HTMLElement;
@@ -19,8 +20,9 @@ export class PatientGui {
     private hoverBoxes: HTMLElementStore = {};
     private time = 0;
     private paused = false;
+    private exerciseSlider: HTMLInputElement;
 
-    constructor(patientRerunCallback:(e:number)=>void) {
+    constructor(patientRerunCallback:(e:number)=>void, patientDiseaseSetCallback:(d:Disease[])=>void) {
         var wrapper = document.createElement("div");
         document.body.appendChild(wrapper);
 
@@ -32,6 +34,8 @@ export class PatientGui {
 
         this.initExerciseSlider(rightDiv, patientRerunCallback);
         this.initValueLabels(rightDiv);
+
+        this.initDiseaseGui(patientRerunCallback, patientDiseaseSetCallback);
     }
 
     private initCanvas(parent: HTMLElement) {
@@ -56,19 +60,19 @@ export class PatientGui {
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
         this.createSpan("Exercise intensity: ", parent, true);
-        var slider = document.createElement("input");
-        slider.setAttribute("max", "100");
-        slider.setAttribute("min", "0");
-        slider.setAttribute("type", "range");
-        slider.setAttribute("value", "0");
-        parent.appendChild(slider);
+        this.exerciseSlider = document.createElement("input");
+        this.exerciseSlider.setAttribute("max", "100");
+        this.exerciseSlider.setAttribute("min", "0");
+        this.exerciseSlider.setAttribute("type", "range");
+        this.exerciseSlider.setAttribute("value", "0");
+        parent.appendChild(this.exerciseSlider);
         var sliderLabel = this.createSpan('0%', parent, true);
-        slider.addEventListener("input", function() {
-            sliderLabel.textContent = slider.value + '%';
-        });
-        slider.addEventListener("change", function() {
-            patientRerunCallback(Number(slider.value)/100);
-        });
+        this.exerciseSlider.addEventListener("input", function() {
+            sliderLabel.textContent = this.exerciseSlider.value + '%';
+        }.bind(this));
+        this.exerciseSlider.addEventListener("change", function() {
+            patientRerunCallback(Number(this.exerciseSlider.value)/100);
+        }.bind(this));
         parent.appendChild(document.createElement('br'));
     }
 
@@ -187,14 +191,54 @@ export class PatientGui {
     }
 
     private createPauseButton(parent: HTMLElement) {
+        parent.appendChild(document.createElement("br"));
         var button = document.createElement("button");
         button.textContent = 'Pause';
-        button.classList.add('pauseButton');
+        button.id = 'pauseButton';
         parent.appendChild(button);
         button.onclick = function() {
             this.paused = !this.paused;
             button.textContent = this.paused ? 'Play': 'Pause';
         }.bind(this);
+
+        var diseasesButton = document.createElement("button");
+        diseasesButton.textContent = 'Diseases';
+        diseasesButton.id = 'diseasesButton';
+        parent.appendChild(diseasesButton);
+        diseasesButton.onclick = function() {
+            document.getElementById("diseaseWindow").style.display = 'block';
+        }.bind(this);
+    }
+
+    private initDiseaseGui(patientRerunCallback:(e:number)=>void, patientDiseaseSetCallback:(d:Disease[])=>void) {
+        var div = document.createElement("div");
+        div.id = "diseaseWindow";
+        document.body.appendChild(div);
+        var form = document.createElement("form");
+        div.appendChild(form);
+        for (var disease of Diseases.getAllDiseaseNames()) {
+            var label = document.createElement("label");
+            var input = document.createElement("input");
+            input.type = "checkbox";
+            input.value = disease;
+            input.name = "diseaseCheckbox";
+            input.onchange = function() {
+                var checkedBoxes = document.querySelectorAll('input[name=diseaseCheckbox]:checked');
+                var diseases: string[] = [];
+                for (var box of checkedBoxes) { diseases.push((<HTMLInputElement>box).value) }
+                patientDiseaseSetCallback(Diseases.getDiseaseListFromNameList(diseases));
+                patientRerunCallback(this.exerciseSlider.value);
+            }.bind(this);
+            label.appendChild(input);
+            this.createSpan(disease, label, true);
+            form.appendChild(label);
+            form.appendChild(document.createElement("br"));
+        }
+        var closeButton = document.createElement("button");
+        closeButton.textContent = "Close";
+        closeButton.id = "diseasesCloseButton";
+        closeButton.onclick = function() { div.style.display = 'none'; }
+        div.appendChild(closeButton);
     }
 
 }

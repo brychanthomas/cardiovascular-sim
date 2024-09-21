@@ -2,9 +2,13 @@ import { Disease, Atherosclerosis, AorticRegurguitation } from './Disease.js';
 
 export class Diseases {
 
-    private static diseases: { [id: string]: Disease } = {
-        'Atherosclerosis': new Atherosclerosis(),
-        'Aortic regurguitation': new AorticRegurguitation()
+    private static diseases: { [id: string]: Disease } = {};
+    
+    static {
+        let ds: Disease[] = [new Atherosclerosis(), new AorticRegurguitation()];
+        for (var d of ds) {
+            this.diseases[d.getName()] = d;
+        }
     }
 
     static getAllDiseaseNames() {
