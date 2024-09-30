@@ -6,6 +6,7 @@ import { OUT } from './CirculatoryOutputs.js';
 import { OutputSummary } from './Output.js';
 import { Diseases } from './Diseases.js';
 import type { Disease } from './Disease.js';
+import { HTMLPrimitives } from './HTMLPrimitives.js';
 
 interface HTMLElementStore {
     [key: string]: HTMLElement;
@@ -57,17 +58,7 @@ export class PatientGui {
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
-        this.createSpan("Exercise intensity: ", parent, true);
-        this.exerciseSlider = document.createElement("input");
-        this.exerciseSlider.setAttribute("max", "100");
-        this.exerciseSlider.setAttribute("min", "0");
-        this.exerciseSlider.setAttribute("type", "range");
-        this.exerciseSlider.setAttribute("value", "0");
-        parent.appendChild(this.exerciseSlider);
-        var sliderLabel = this.createSpan('0%', parent, true);
-        this.exerciseSlider.addEventListener("input", function() {
-            sliderLabel.textContent = this.exerciseSlider.value + '%';
-        }.bind(this));
+        this.exerciseSlider = HTMLPrimitives.slider(parent, "Exercise intensity: ");
         this.exerciseSlider.addEventListener("change", function() {
             patientRerunCallback(Number(this.exerciseSlider.value)/100);
         }.bind(this));
@@ -77,57 +68,22 @@ export class PatientGui {
     private initValueLabels(parent: HTMLElement) {
         //parameter has its normal ID, output has +1000
         for (var group of valueGrouping) {
-            var box = this.createGroupBox(parent, group.name);
+            var box = HTMLPrimitives.groupBox(parent, group.name);
             var isFirstInBox = true;
             for (var id of group.valueIds) {
-                this.valueLabels[id] = this.createSpan("", box, isFirstInBox);
+                this.valueLabels[id] = HTMLPrimitives.span(box, "", isFirstInBox);
                 if (id < 1000) { 
                     this.valueLabels[id].style.color = "cyan";
-                    this.hoverBoxes[id] = this.createHoverBox(box, this.valueLabels[id], '#dce0f4');
+                    this.hoverBoxes[id] = HTMLPrimitives.hoverBox(box, this.valueLabels[id], '#dce0f4');
                  }
                 else { 
                     this.valueLabels[id].style.color = "yellow";
-                    this.hoverBoxes[id] = this.createHoverBox(box, this.valueLabels[id], '#f5f5dc');
+                    this.hoverBoxes[id] = HTMLPrimitives.hoverBox(box, this.valueLabels[id], '#f5f5dc');
                  }
                 isFirstInBox = false;
             }
 
         }
-    }
-
-    private createSpan(text: string, parent: HTMLElement, noBr?: boolean) {
-        if (!noBr) {
-            parent.appendChild(document.createElement('br'));
-        }
-        var span = document.createElement("span");
-        span.textContent = text;
-        parent.appendChild(span);
-        return span;
-    }
-
-    private createGroupBox(parent: HTMLElement, title: string) {
-        var div = document.createElement("div");
-        div.classList.add("groupingBox");
-        parent.appendChild(div);
-        var titleSpan = this.createSpan(title, div, true);
-        titleSpan.classList.add("groupingBoxTitle");
-        return div;
-    }
-
-    private createHoverBox(parent: HTMLElement, hoverText: HTMLSpanElement, colour: string) {
-        var box = document.createElement("div");
-        box.classList.add("hoverBox");
-        box.style.backgroundColor = colour;
-        hoverText.onmousemove = function (e) {
-            box.style.display = "block";
-            box.style.left = e.clientX + 'px';
-            box.style.top = e.clientY + 5 + 'px';
-        }
-        hoverText.onmouseleave = function() {
-            box.style.display = "none";
-        }
-        parent.appendChild(box);
-        return box;
     }
 
     setValues(parameters: { [id: number]: ParameterSummary }, outputs: { [id: number]: OutputSummary }) {
@@ -170,7 +126,15 @@ export class PatientGui {
         }
         this.pressureGraph.clearValues();
         this.flowGraph.clearValues();
-        this.time = 0;
+        let [t, p] = pressures.getNextValue(); //populate first 10s of graphs
+        while (t < 10) {
+            this.pressureGraph.addValue(t, p);
+            pressures.popNextValue();
+            let [t1, q] = flows.popNextValue();
+            this.flowGraph.addValue(t1, q);
+            [t, p] = pressures.getNextValue();
+        }
+        this.time = t;
         this.intervalId = setInterval(function(){
             if (!this.paused) {
                 let [t, p] = pressures.getNextValue();
@@ -189,7 +153,7 @@ export class PatientGui {
     }
 
     private initControls(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
-        var div = this.createGroupBox(parent, "Controls");
+        var div = HTMLPrimitives.groupBox(parent, "Controls");
         div.style.marginLeft = '60px';
         div.style.marginRight = '40px';
         this.initExerciseSlider(div, patientRerunCallback);
@@ -254,7 +218,7 @@ export class PatientGui {
                 patientRerunCallback(Number(this.exerciseSlider.value)/100);
             }.bind(this);
             label.appendChild(input);
-            this.createSpan(disease, label, true);
+            HTMLPrimitives.span(label, disease, true);
             form.appendChild(label);
             form.appendChild(document.createElement("br"));
         }
