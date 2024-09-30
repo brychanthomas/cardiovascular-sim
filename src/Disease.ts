@@ -2,10 +2,19 @@ import { PARAM } from './CirculatoryParameters.js';
 
 export abstract class Disease {
 
-    protected parameterFactors: { [id: number] : number };
+    protected parameterFactorChanges: { [id: number] : number };
+    protected severity: number = 1;
 
     getFactors() {
-        return this.parameterFactors;
+        var factors: { [id: number] : number } = {};
+        for (var id in this.parameterFactorChanges) {
+            factors[id] = 1 + this.parameterFactorChanges[id]*this.severity;
+        }
+        return factors;
+    }
+
+    setSeverity(s: number) {
+        this.severity = s; 
     }
 
     abstract getName(): string;
@@ -15,18 +24,18 @@ export abstract class Disease {
 
 
 export class Atherosclerosis extends Disease {
-    parameterFactors = {
-        [PARAM.C_a]: 0.7,
-        [PARAM.R_a]: 1.2,
-        [PARAM.R_p]: 1.2
+    parameterFactorChanges = {
+        [PARAM.C_a]: -0.3,
+        [PARAM.R_a]: +0.2,
+        //[PARAM.R_p]: 1.2
     }
 
     getName() { return "Atherosclerosis" }
 }
 
 export class AorticRegurguitation extends Disease {
-    parameterFactors = {
-        [PARAM.aorticBackflow]: 400
+    parameterFactorChanges = {
+        [PARAM.aorticBackflow]: +399
     }
 
     getName() { return "Aortic regurguitation" }
