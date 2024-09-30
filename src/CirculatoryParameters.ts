@@ -99,7 +99,7 @@ export class CirculatoryParameters {
                 let diseaseFactors = diseases[i].getFactors();
                 if (param in diseaseFactors) { // if disease modifies parameter
                     factors.push(diseaseFactors[param]);
-                    diseaseNames.push(diseases[i].getName());
+                    diseaseNames.push(diseases[i].getName() + ' (' + diseases[i].getSeverity()+diseases[i].getSeverityUnit()+')');
                 }
             }
             this.getParameter(param).setDiseaseFactors(factors);

@@ -3,7 +3,7 @@ import { PARAM } from './CirculatoryParameters.js';
 export abstract class Disease {
 
     protected parameterFactorChanges: { [id: number] : number };
-    protected severity: number = 1;
+    protected severity: number = 0;
     protected severityMax = 100; 
     protected severityUnit = '%';
 
@@ -21,6 +21,10 @@ export abstract class Disease {
      */
     setSeverity(s: number) {
         this.severity = s/this.severityMax; 
+    }
+
+    getSeverity() {
+        return this.severity*this.severityMax;
     }
 
     getMaxSeverity() {
