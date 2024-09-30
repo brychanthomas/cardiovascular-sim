@@ -34,10 +34,10 @@ export class CirculatorySystem {
         var set_point = this.parameters.getValue(PARAM.baroreflexSetPoint);
         let count = 0;
         do {
-            if (map < set_point-0.5) {
-                reflex_coeff += Math.min((set_point-map)*0.001, 0.1);
-            } else if (map > set_point+0.5) {
-                reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
+            if (map < set_point-0.3) {
+                reflex_coeff += Math.min(Math.pow(0.9, count), 0.2);
+            } else if (map > set_point+0.3) {
+                reflex_coeff -= Math.min(Math.pow(0.9, count), 0.2);
             }
             this.parameters.getParameter(PARAM.rate).setBaroreflexFactor(1 + 2.3*reflex_coeff);
             this.parameters.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
@@ -51,13 +51,14 @@ export class CirculatorySystem {
             this.evaluatePressures();
             map = this.getMAP();
             count++;
-            if (count > 200) {
+            if (count > 100) {
                 console.log("BAROREFLEX FAILED");
+                console.log('reflex_coeff:',reflex_coeff);
                 return;
             }
             reflex_coeff = Math.min(reflex_coeff, 1);
             reflex_coeff = Math.max(reflex_coeff, 0);
-        } while (map < set_point-0.5 || map > set_point+0.5);
+        } while (map < set_point-0.3 || map > set_point+0.3);
         console.log('reflex_coeff:',reflex_coeff);
     }
 
