@@ -171,10 +171,11 @@ export class Graph {
     }
 
     clearValues() {
-        this.minval = Math.min(...this.storevs);
-        this.maxval = Math.max(...this.storevs);
+        this.minval = Math.floor(Math.min(...this.storevs)/10)*10;
+        this.maxval = Math.ceil(Math.max(...this.storevs)/10)*10;
         this.ts = [];
         this.vs = [];
+        this.drawTicksAndLabels();
     }
 
     store() {
@@ -185,8 +186,9 @@ export class Graph {
     clearStored() {
         this.storets = [];
         this.storevs = [];
-        this.maxval = Math.max(...this.vs);
-        this.minval = Math.min(...this.vs);
+        this.minval = Math.floor(Math.min(...this.vs)/10)*10;
+        this.maxval = Math.ceil(Math.max(...this.vs)/10)*10;
+        this.drawTicksAndLabels();
     }
 
     private initTimePeriodSelect(canvas: HTMLElement) {
