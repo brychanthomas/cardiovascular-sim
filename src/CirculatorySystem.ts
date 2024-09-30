@@ -34,9 +34,9 @@ export class CirculatorySystem {
         var set_point = this.parameters.getValue(PARAM.baroreflexSetPoint);
         let count = 0;
         do {
-            if (map < set_point-1) {
+            if (map < set_point-0.5) {
                 reflex_coeff += Math.min((set_point-map)*0.001, 0.1);
-            } else if (map > set_point+1) {
+            } else if (map > set_point+0.5) {
                 reflex_coeff -= Math.min((map-set_point)*0.001, 0.1);
             }
             this.parameters.getParameter(PARAM.rate).setBaroreflexFactor(1 + 2.3*reflex_coeff);
@@ -57,7 +57,7 @@ export class CirculatorySystem {
             }
             reflex_coeff = Math.min(reflex_coeff, 1);
             reflex_coeff = Math.max(reflex_coeff, 0);
-        } while (map < set_point-1 || map > set_point+1);
+        } while (map < set_point-0.5 || map > set_point+0.5);
         console.log('reflex_coeff:',reflex_coeff);
     }
 
@@ -83,11 +83,11 @@ export class CirculatorySystem {
     }
 
     getDiastolicPressure() {
-        return Math.round(Math.min(...this.aortapressureseq));
+        return Math.min(...this.aortapressureseq);
     }
 
     getSystolicPressure() {
-        return Math.round(Math.max(...this.aortapressureseq));
+        return Math.max(...this.aortapressureseq);
     }
 
     getMAP() {
