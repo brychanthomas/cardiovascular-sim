@@ -26,35 +26,33 @@ export class PatientGui {
         var wrapper = document.createElement("div");
         document.body.appendChild(wrapper);
 
-        this.initCanvas(wrapper);
+        var leftDiv = document.createElement("div");
+        leftDiv.classList.add("leftFloat");
+        wrapper.appendChild(leftDiv);
+
+        this.initControls(leftDiv, patientRerunCallback);
+        this.initCanvas(leftDiv);
 
         var rightDiv = document.createElement("div");
         rightDiv.classList.add("leftFloat");
         wrapper.appendChild(rightDiv);
-
-        this.initExerciseSlider(rightDiv, patientRerunCallback);
         this.initValueLabels(rightDiv);
 
         this.initDiseaseGui(patientRerunCallback, patientDiseaseSetCallback);
     }
 
     private initCanvas(parent: HTMLElement) {
-        var div = document.createElement("div");
         var canvas = document.createElement("canvas");
-        div.classList.add("leftFloat");
-        div.appendChild(canvas);
-        parent.appendChild(div);
+        parent.appendChild(canvas);
         
         var ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
-        ctx.canvas.width  = window.innerWidth/2;
-        ctx.canvas.height = window.innerHeight - 50;
+        ctx.canvas.width  = window.innerWidth/1.8;
+        ctx.canvas.height = 520;
 
         this.pressureGraph = new Graph(canvas, 60, 10, ctx.canvas.width - 100, 200, 5);
         this.pressureGraph.setYLabel("Aortic pressure (mmHg)");
-        this.flowGraph = new Graph(canvas, 60, 310, ctx.canvas.width - 100, 200, 5);
+        this.flowGraph = new Graph(canvas, 60, 260, ctx.canvas.width - 100, 200, 5);
         this.flowGraph.setYLabel("Aortic valve flow (mL/s)");
-
-        this.createPauseButton(div);
 
     }
 
@@ -190,24 +188,50 @@ export class PatientGui {
         }.bind(this), 50);
     }
 
-    private createPauseButton(parent: HTMLElement) {
-        parent.appendChild(document.createElement("br"));
-        var button = document.createElement("button");
-        button.textContent = 'Pause';
-        button.id = 'pauseButton';
-        parent.appendChild(button);
-        button.onclick = function() {
+    private initControls(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
+        var div = this.createGroupBox(parent, "Controls");
+        div.style.marginLeft = '60px';
+        div.style.marginRight = '40px';
+        this.initExerciseSlider(div, patientRerunCallback);
+        div.appendChild(document.createElement("br"));
+
+        var pauseButton = document.createElement("button");
+        pauseButton.textContent = 'Pause';
+        div.appendChild(pauseButton);
+        pauseButton.onclick = function() {
             this.paused = !this.paused;
-            button.textContent = this.paused ? 'Play': 'Pause';
+            pauseButton.textContent = this.paused ? 'Play ': 'Pause';
         }.bind(this);
+        pauseButton.style.width = '5em';
+
+        var storeButton = document.createElement("button");
+        storeButton.textContent = 'Store';
+        div.appendChild(storeButton);
+        storeButton.onclick = function() {
+            this.pressureGraph.store();
+            this.flowGraph.store();
+        }.bind(this);
+        storeButton.style.marginLeft = '10px';
+        storeButton.style.width = '5em';
+
+        var storeButton = document.createElement("button");
+        storeButton.textContent = 'Clear';
+        div.appendChild(storeButton);
+        storeButton.onclick = function() {
+            this.pressureGraph.clearStored();
+            this.flowGraph.clearStored();
+        }.bind(this);
+        storeButton.style.marginLeft = '10px';
+        storeButton.style.width = '5em';
 
         var diseasesButton = document.createElement("button");
         diseasesButton.textContent = 'Diseases';
-        diseasesButton.id = 'diseasesButton';
-        parent.appendChild(diseasesButton);
+        div.appendChild(diseasesButton);
         diseasesButton.onclick = function() {
             document.getElementById("diseaseWindow").style.display = 'block';
         }.bind(this);
+        diseasesButton.style.marginLeft = '10px';
+        diseasesButton.style.width = '5em';
     }
 
     private initDiseaseGui(patientRerunCallback:(e:number)=>void, patientDiseaseSetCallback:(d:Disease[])=>void) {

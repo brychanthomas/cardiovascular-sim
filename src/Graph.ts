@@ -10,6 +10,8 @@ export class Graph {
     private maxval: number;
     private ts: number[];
     private vs: number[];
+    private storets: number[] = [];
+    private storevs: number[] = [];
     private ylabel: string;
 
     constructor(canvas: HTMLCanvasElement, basex, basey, width, height, timespan) {
@@ -46,6 +48,11 @@ export class Graph {
 
     private timetox(t: number): number {
         var maxt = this.ts[this.ts.length-1];
+        return this.basex+1+(this.width-1)*(t-maxt+this.timespan)/this.timespan;
+    }
+
+    private storedtimetox(t: number): number {
+        var maxt = this.storets[this.storets.length-1];
         return this.basex+1+(this.width-1)*(t-maxt+this.timespan)/this.timespan;
     }
 
@@ -138,8 +145,18 @@ export class Graph {
     drawValues() {
         this.context.clearRect(this.basex, this.basey-1, this.width+1, this.height+2)
         this.drawAxes();
-
         this.context.lineWidth = 1;
+
+        if (this.storevs.length > 0) {
+            this.context.strokeStyle = "#ff9999";
+            this.context.beginPath();
+            this.context.moveTo(this.storedtimetox(this.storets[0]), this.valtoy(this.storevs[0]));
+            for (let i=1; i<this.storets.length; i++) {
+                this.context.lineTo(this.storedtimetox(this.storets[i]), this.valtoy(this.storevs[i]));
+            }
+            this.context.stroke();
+        }
+
         this.context.strokeStyle = "#99ff99";
         this.context.beginPath();
         this.context.moveTo(this.timetox(this.ts[0]), this.valtoy(this.vs[0]));
@@ -147,14 +164,25 @@ export class Graph {
             this.context.lineTo(this.timetox(this.ts[i]), this.valtoy(this.vs[i]));
         }
         this.context.stroke();
-        this.context.lineWidth = 1;
     }
 
     clearValues() {
-        this.minval = null;
-        this.maxval = null;
+        this.minval = Math.min(...this.storevs);
+        this.maxval = Math.max(...this.storevs);
         this.ts = [];
         this.vs = [];
+    }
+
+    store() {
+        this.storets = this.ts.slice();
+        this.storevs = this.vs.slice();
+    }
+
+    clearStored() {
+        this.storets = [];
+        this.storevs = [];
+        this.maxval = Math.max(...this.vs);
+        this.minval = Math.min(...this.vs);
     }
 
     private initTimePeriodSelect(canvas: HTMLElement) {

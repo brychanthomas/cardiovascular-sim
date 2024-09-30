@@ -51,18 +51,6 @@ ul {
     margin: 0em;
 }
 
-#pauseButton {
-    display: inline;
-    position: absolute;
-    left: 20vw;
-}
-
-#diseasesButton {
-    display: inline;
-    position: absolute;
-    left: 30vw;
-}
-
 #diseaseWindow {
     position: absolute;
     top: 10vh;
