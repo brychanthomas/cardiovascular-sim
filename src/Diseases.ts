@@ -26,4 +26,8 @@ export class Diseases {
         }
         return diseases;
     }
+
+    static setSeverityByName(name: string, severity: number) {
+        this.getDiseaseFromName(name).setSeverity(severity);
+    }
 }

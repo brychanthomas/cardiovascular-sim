@@ -4,6 +4,8 @@ export abstract class Disease {
 
     protected parameterFactorChanges: { [id: number] : number };
     protected severity: number = 1;
+    protected severityMax = 100; 
+    protected severityUnit = '%';
 
     getFactors() {
         var factors: { [id: number] : number } = {};
@@ -13,8 +15,20 @@ export abstract class Disease {
         return factors;
     }
 
+    /**
+     * Set disease severity
+     * @param s the severity of the disease as a decimal from 0 to maxSeverity
+     */
     setSeverity(s: number) {
-        this.severity = s; 
+        this.severity = s/this.severityMax; 
+    }
+
+    getMaxSeverity() {
+        return this.severityMax;
+    }
+
+    getSeverityUnit() {
+        return this.severityUnit
     }
 
     abstract getName(): string;

@@ -35,17 +35,18 @@ export class HTMLPrimitives {
         return box;
     }
 
-    static slider(parent: HTMLElement, label: string) {
-        HTMLPrimitives.span(parent, "Exercise intensity: ", true);
+    static slider(parent: HTMLElement, label: string, maxValue: number, unit: string) {
+        HTMLPrimitives.span(parent, label, true);
         let slider = document.createElement("input");
-        slider.setAttribute("max", "100");
+        slider.setAttribute("max", String(maxValue));
         slider.setAttribute("min", "0");
         slider.setAttribute("type", "range");
         slider.setAttribute("value", "0");
+        slider.setAttribute("step", String(maxValue/100));
         parent.appendChild(slider);
-        var sliderLabel = HTMLPrimitives.span(parent, '0%', true);
+        var sliderLabel = HTMLPrimitives.span(parent, '0'+unit, true);
         slider.addEventListener("input", function() {
-            sliderLabel.textContent = slider.value + '%';
+            sliderLabel.textContent = slider.value + unit;
         });
         return slider;
     }

@@ -58,7 +58,7 @@ export class PatientGui {
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
-        this.exerciseSlider = HTMLPrimitives.slider(parent, "Exercise intensity: ");
+        this.exerciseSlider = HTMLPrimitives.slider(parent, "Exercise intensity: ", 100, '%');
         this.exerciseSlider.addEventListener("change", function() {
             patientRerunCallback(Number(this.exerciseSlider.value)/100);
         }.bind(this));
@@ -202,30 +202,42 @@ export class PatientGui {
         var div = document.createElement("div");
         div.id = "diseaseWindow";
         document.body.appendChild(div);
-        var form = document.createElement("form");
-        div.appendChild(form);
+        var tbl = document.createElement("table");
+        div.appendChild(tbl);
+        tbl.innerHTML = '<tr><th>Name</th><th>Severity</th></tr>';
         for (var disease of Diseases.getAllDiseaseNames()) {
+            var row = document.createElement('tr');
             var label = document.createElement("label");
             var input = document.createElement("input");
+            var td = document.createElement('td');
+            td.appendChild(input);
             input.type = "checkbox";
             input.value = disease;
             input.name = "diseaseCheckbox";
-            input.onchange = function() {
-                var checkedBoxes = document.querySelectorAll('input[name=diseaseCheckbox]:checked');
-                var diseases: string[] = [];
-                for (var box of checkedBoxes) { diseases.push((<HTMLInputElement>box).value) }
-                patientDiseaseSetCallback(Diseases.getDiseaseListFromNameList(diseases));
-                patientRerunCallback(Number(this.exerciseSlider.value)/100);
-            }.bind(this);
-            label.appendChild(input);
-            HTMLPrimitives.span(label, disease, true);
-            form.appendChild(label);
-            form.appendChild(document.createElement("br"));
+            label.appendChild(td);
+            HTMLPrimitives.span(td, disease, true);
+            label.appendChild(td);
+            row.appendChild(label);
+            td = document.createElement('td');
+            let diseaseObj = Diseases.getDiseaseFromName(disease);
+            let severitySlider = HTMLPrimitives.slider(td, '', diseaseObj.getMaxSeverity(), diseaseObj.getSeverityUnit());
+            severitySlider.addEventListener("change", function() {
+                diseaseObj.setSeverity(Number(severitySlider.value));
+            }.bind(this));
+            row.appendChild(td);
+            tbl.appendChild(row);
         }
         var closeButton = document.createElement("button");
         closeButton.textContent = "Close";
         closeButton.id = "diseasesCloseButton";
-        closeButton.onclick = function() { div.style.display = 'none'; }
+        closeButton.onclick = function() { 
+            var checkedBoxes = document.querySelectorAll('input[name=diseaseCheckbox]:checked');
+            var diseases: string[] = [];
+            for (var box of checkedBoxes) { diseases.push((<HTMLInputElement>box).value) }
+            patientDiseaseSetCallback(Diseases.getDiseaseListFromNameList(diseases));
+            patientRerunCallback(Number(this.exerciseSlider.value)/100);
+            div.style.display = 'none';
+         }.bind(this);
         div.appendChild(closeButton);
     }
 
