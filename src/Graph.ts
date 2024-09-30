@@ -6,6 +6,7 @@ export class Graph {
     private width: number;
     private height: number;
     private timespan: number;
+    private timespanOptions = [1,3,5,10];
     private minval: number;
     private maxval: number;
     private ts: number[];
@@ -136,7 +137,7 @@ export class Graph {
             this.minval = Math.floor(v/10)*10;
             this.drawTicksAndLabels();
         }
-        while (this.ts[0] < t-this.timespan) {
+        while (this.ts[0] < t-Math.max(...this.timespanOptions)) {
             this.ts.splice(0, 1);
             this.vs.splice(0, 1);
         }
@@ -149,19 +150,22 @@ export class Graph {
 
         if (this.storevs.length > 0) {
             this.context.strokeStyle = "#ff9999";
-            this.context.beginPath();
-            this.context.moveTo(this.storedtimetox(this.storets[0]), this.valtoy(this.storevs[0]));
-            for (let i=1; i<this.storets.length; i++) {
-                this.context.lineTo(this.storedtimetox(this.storets[i]), this.valtoy(this.storevs[i]));
-            }
-            this.context.stroke();
+            this.plotArrays(this.storets.map(this.storedtimetox.bind(this)), this.storevs.map(this.valtoy.bind(this)));
         }
 
         this.context.strokeStyle = "#99ff99";
+        this.plotArrays(this.ts.map(this.timetox.bind(this)), this.vs.map(this.valtoy.bind(this)));
+    }
+
+    private plotArrays(xs: number[], ys: number[]) {
         this.context.beginPath();
-        this.context.moveTo(this.timetox(this.ts[0]), this.valtoy(this.vs[0]));
-        for (let i=1; i<this.ts.length; i++) {
-            this.context.lineTo(this.timetox(this.ts[i]), this.valtoy(this.vs[i]));
+        let startidx = 0;
+        while (xs[startidx] <= this.basex) {
+            startidx++
+        }
+        this.context.moveTo(xs[startidx], ys[startidx]);
+        for (let i=startidx+1; i<xs.length; i++) {
+            this.context.lineTo(xs[i], ys[i]);
         }
         this.context.stroke();
     }
@@ -186,7 +190,6 @@ export class Graph {
     }
 
     private initTimePeriodSelect(canvas: HTMLElement) {
-        var options = [1, 3, 5, 10];
         var div = canvas.parentElement;
         var canvasPos = canvas.getBoundingClientRect();
         var select = document.createElement("select");
@@ -194,15 +197,15 @@ export class Graph {
         select.style.top = canvasPos.top + this.basey + this.height + 8 + 'px';
         select.style.left = canvasPos.left + this.basex - 10 +'px';
         div.appendChild(select);
-        for (var i = 0; i<options.length; i++) {
+        for (var i = 0; i<this.timespanOptions.length; i++) {
             var option = document.createElement("option");
-            option.text = -options[i] + ' s';
-            option.value = String(options[i]);
+            option.text = -this.timespanOptions[i] + ' s';
+            option.value = String(this.timespanOptions[i]);
             select.appendChild(option);
         }
         select.value = '5';
         select.onchange = function () {
-            this.timespan = options[select.selectedIndex];
+            this.timespan = this.timespanOptions[select.selectedIndex];
             this.drawTicksAndLabels();
         }.bind(this);
     }
