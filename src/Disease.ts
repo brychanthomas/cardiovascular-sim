@@ -58,3 +58,15 @@ export class AorticRegurguitation extends Disease {
 
     getName() { return "Aortic regurguitation" }
 }
+
+export class Hypovolaemia extends Disease {
+    
+    severityMax = 1000; 
+    severityUnit = 'mL lost';
+    parameterFactorChanges = {
+        [PARAM.msfp]: -1,
+        [PARAM.aorticBackflow]: -1
+    }
+
+    getName() { return "Hypovolaemia" }
+}
