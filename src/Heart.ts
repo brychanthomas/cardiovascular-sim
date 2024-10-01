@@ -15,6 +15,7 @@ export class Heart {
     getFlow(t: number): number {
         let T = 60/this.rate;
         let peak_flow = (this.strokeVolume) * Math.PI/(2*this.systoleLength);
+        this.dicroticPeakFlow = peak_flow / 5; //estimation - should actually be proportional to MAP minus intra-ventricular pressure
         if (t%T < this.systoleLength) {
             return this.aorticBackflow+peak_flow*Math.sin(Math.PI * (t%T)/this.systoleLength);
         } else if (t%T < this.systoleLength + this.dicroticLength) {
@@ -48,7 +49,6 @@ export class Heart {
             this.rap = -this.rap + params.getValue(PARAM.msfp);
         } else { this.rap = 0 }
         this.dicroticLength = params.getValue(PARAM.dicroticLength);
-        this.dicroticPeakFlow = params.getValue(PARAM.dicroticPeakFlow);
         this.systoleLength = params.getValue(PARAM.systoleLength);
         this.rate = params.getValue(PARAM.rate);
         this.aorticBackflow = params.getValue(PARAM.aorticBackflow);

@@ -8,12 +8,11 @@ export const PARAM = {
     rate: 3,
     systoleLength: 4,
     dicroticLength: 5,
-    dicroticPeakFlow: 6,
-    aorticBackflow: 7,
-    msfp: 8,
-    rvr: 9,
-    maxStrokeVolume: 10,
-    baroreflexSetPoint: 11
+    aorticBackflow: 6,
+    msfp: 7,
+    rvr: 8,
+    maxStrokeVolume: 9,
+    baroreflexSetPoint: 10
 }
 
 const baseValues = {
@@ -23,7 +22,6 @@ const baseValues = {
     [PARAM.rate]: 55,              // bpm
     [PARAM.systoleLength]: 0.3,    // s
     [PARAM.dicroticLength]: 0.05,  // s
-    [PARAM.dicroticPeakFlow]: 100, // mL/s
     [PARAM.aorticBackflow]: -0.1,  // mL/s
     [PARAM.msfp]: 7.2,             // mmHg
     [PARAM.rvr]: 7/5000,           // mmHg s/mL
@@ -38,7 +36,6 @@ const units = {
     [PARAM.rate]: 'bpm',
     [PARAM.systoleLength]: 's',
     [PARAM.dicroticLength]: 's',
-    [PARAM.dicroticPeakFlow]: 'mL/s',
     [PARAM.aorticBackflow]: 'mL/s',
     [PARAM.msfp]: 'mmHg',
     [PARAM.rvr]: 'mmHg s/mL',
@@ -53,7 +50,6 @@ const formattedNames = {
     [PARAM.rate]: 'HR',
     [PARAM.systoleLength]: 'T<sub>systole</sub>',
     [PARAM.dicroticLength]: 'T<sub>dicrotic</sub>',
-    [PARAM.dicroticPeakFlow]: 'Dicrotic peak flow',
     [PARAM.aorticBackflow]: 'Aortic backflow',
     [PARAM.msfp]: 'MSFP',
     [PARAM.rvr]: 'RVR',
@@ -68,7 +64,6 @@ const descriptions = {
     [PARAM.rate]: 'Heart rate',
     [PARAM.systoleLength]: 'Length of mechanical systole',
     [PARAM.dicroticLength]: 'Time aortic valve takes to close after pressure gradient reverses',
-    [PARAM.dicroticPeakFlow]: 'Peak reverse flow before aortic valve closes',
     [PARAM.aorticBackflow]: 'Constant reverse flow due to imperfect closing of aortic valve',
     [PARAM.msfp]: 'Mean systemic filling pressure',
     [PARAM.rvr]: 'Resistance to venous return',
