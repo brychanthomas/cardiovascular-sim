@@ -25,6 +25,9 @@ export class CirculatorySystem {
         let minidx = ps.indexOf(Math.min(...ps));
         this.aortapressureseq = ps.slice(minidx).concat(ps.slice(0,minidx));
         this.aortatimeseq = ts.slice(0, samplesPerBeat);
+        if (this.heart.getCardiacOutput() === 0) {
+            this.aortapressureseq = this.aortapressureseq.map(() => 0);
+        }
     }
 
     baroreflex() {
@@ -118,6 +121,7 @@ export class CirculatorySystem {
         this.outputs.setValue(OUT.systolicPressure, this.getSystolicPressure());
         this.outputs.setValue(OUT.rap, this.heart.getRAP());
         this.outputs.setValue(OUT.strokeVolume, this.heart.getStrokeVolume());
+        console.log(this.heart.getStrokeVolume());
         this.outputs.setValue(OUT.pp, this.getPP());
     }
 
