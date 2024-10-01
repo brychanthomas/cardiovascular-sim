@@ -46,7 +46,7 @@ export class SummarisableParameter extends Parameter {
     getSummary(): ParameterSummary {
         var diseaseFactors = [];
         for (var i = 0; i<this.diseaseFactorExplanations.length; i++) {
-            diseaseFactors.push(this.diseaseFactors[i] + 'x - ' + this.diseaseFactorExplanations[i]);
+            diseaseFactors.push(this.round(this.diseaseFactors[i]) + 'x - ' + this.diseaseFactorExplanations[i]);
         }
         return {
             name: this.formattedName,
