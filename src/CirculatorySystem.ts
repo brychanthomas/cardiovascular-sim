@@ -54,7 +54,7 @@ export class CirculatorySystem {
             this.evaluatePressures();
             map = this.getMAP();
             count++;
-            if (count > 100) {
+            if (count > 200) {
                 console.log("BAROREFLEX FAILED");
                 console.log('reflex_coeff:',reflex_coeff);
                 return;
@@ -121,7 +121,6 @@ export class CirculatorySystem {
         this.outputs.setValue(OUT.systolicPressure, this.getSystolicPressure());
         this.outputs.setValue(OUT.rap, this.heart.getRAP());
         this.outputs.setValue(OUT.strokeVolume, this.heart.getStrokeVolume());
-        console.log(this.heart.getStrokeVolume());
         this.outputs.setValue(OUT.pp, this.getPP());
     }
 

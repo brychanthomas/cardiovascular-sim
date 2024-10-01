@@ -23,7 +23,7 @@ const baseValues = {
     [PARAM.systoleLength]: 0.3,    // s
     [PARAM.dicroticLength]: 0.05,  // s
     [PARAM.aorticBackflow]: -0.1,  // mL/s
-    [PARAM.msfp]: 7.2,             // mmHg
+    [PARAM.msfp]: 7.3,             // mmHg
     [PARAM.rvr]: 7/5000,           // mmHg s/mL
     [PARAM.maxStrokeVolume]: 125,  // ml
     [PARAM.baroreflexSetPoint]: 93 // mmHg
