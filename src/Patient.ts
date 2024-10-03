@@ -1,25 +1,6 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
 import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
-import { AorticRegurguitation, Atherosclerosis } from './Disease.js';
-
-interface Parameter {
-    value: number,
-    unit: string,
-    changes: string[]
-}
-
-export interface ParameterValues {
-    R_p: Parameter,
-    R_a: Parameter,
-    C_a: Parameter,
-    rate: Parameter,
-    strokeVolume: Parameter,
-    co: Parameter,
-    map: Parameter,
-    pp: Parameter,
-    pressureString: string
-}
 
 export class Patient {
 
