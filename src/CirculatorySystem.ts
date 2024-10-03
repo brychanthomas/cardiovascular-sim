@@ -36,6 +36,7 @@ export class CirculatorySystem {
         var reflex_coeff = 0;
         var set_point = this.parameters.getValue(PARAM.baroreflexSetPoint);
         let count = 0;
+        let p = this.parameters;
         do {
             if (map < set_point-0.3) {
                 reflex_coeff += Math.min(Math.pow(0.9, count), 0.2);
@@ -44,15 +45,18 @@ export class CirculatorySystem {
             }
             reflex_coeff = Math.min(reflex_coeff, 1);
             let bounded_reflex_coeff = Math.max(reflex_coeff, 0);
-            this.parameters.getParameter(PARAM.rate).setBaroreflexFactor(1 + 2.3*reflex_coeff);
-            this.parameters.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
-            this.parameters.getParameter(PARAM.systoleLength).setBaroreflexFactor(1 - 0.33*bounded_reflex_coeff);
-            this.parameters.getParameter(PARAM.systoleLength).setBaroreflexFactorExplanation("baroreflex: myocardial β<sub>1</sub> adrenergic receptor activation increasing SERCA pump activity for faster relaxation");
-            this.parameters.getParameter(PARAM.R_p).setBaroreflexFactor(1 + 0.33*bounded_reflex_coeff); // 1 / 0.75(25% splanchnic flow) = 1.33
-            this.parameters.getParameter(PARAM.R_p).setBaroreflexFactorExplanation("baroreflex: splanchnic vasoconstriction via α<sub>1</sub> adrenergic receptors");
-            this.parameters.getParameter(PARAM.msfp).setBaroreflexFactor(1 + 2*bounded_reflex_coeff);
-            this.parameters.getParameter(PARAM.msfp).setBaroreflexFactorExplanation("baroreflex: venoconstriction");
-            this.applyParameters(this.parameters);
+            p.getParameter(PARAM.systoleLength).setBaroreflexFactor(1 - 0.33*bounded_reflex_coeff);
+            p.getParameter(PARAM.systoleLength).setBaroreflexFactorExplanation("baroreflex: myocardial β<sub>1</sub> adrenergic receptor activation increasing SERCA pump activity for faster relaxation");
+            p.getParameter(PARAM.R_p).setBaroreflexFactor(1 + 0.33*bounded_reflex_coeff); // 1 / 0.75(25% splanchnic flow) = 1.33
+            p.getParameter(PARAM.R_p).setBaroreflexFactorExplanation("baroreflex: splanchnic vasoconstriction via α<sub>1</sub> adrenergic receptors");
+            p.getParameter(PARAM.msfp).setBaroreflexFactor(1 + 2*bounded_reflex_coeff);
+            p.getParameter(PARAM.msfp).setBaroreflexFactorExplanation("baroreflex: venoconstriction");
+            let maxHeartRate = 60/(p.getParameter(PARAM.systoleLength).getValue()+p.getParameter(PARAM.dicroticLength).getValue()*2);
+            p.getParameter(PARAM.rate).setBaroreflexFactor(1);
+            let maxRateFactor = maxHeartRate/p.getParameter(PARAM.rate).getValue();
+            p.getParameter(PARAM.rate).setBaroreflexFactor(1 + (maxRateFactor-1)*reflex_coeff);
+            p.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
+            this.applyParameters(p);
             this.evaluatePressures();
             map = this.getMAP();
             count++;
