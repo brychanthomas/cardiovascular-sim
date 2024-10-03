@@ -54,6 +54,10 @@ export class CirculatoryOutputs {
         this.values[id].setValue(value);
     }
 
+    getValue(id: number) {
+        return this.values[id].getValue();
+    }
+
     getSummary(id: number): OutputSummary {
         return this.values[id].getSummary();
     }

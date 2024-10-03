@@ -3,6 +3,15 @@ import { Vasculature } from './Vasculature.js';
 import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
 import { PARAM, CirculatoryParameters } from './CirculatoryParameters.js';
 import { OUT, CirculatoryOutputs } from './CirculatoryOutputs.js';
+import { Disease } from './Disease.js'
+
+export interface OutputValues {
+    [id: number]: number
+}
+
+export interface ParameterValues {
+    [id: number]: number
+}
 
 export class CirculatorySystem {
 
@@ -14,6 +23,21 @@ export class CirculatorySystem {
 
     private parameters = new CirculatoryParameters();
     private outputs = new CirculatoryOutputs();
+
+    setExerciseFactor(exerciseFactor: number) {
+        this.parameters.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.81*exerciseFactor); // TPR drops to 25% = 0.19(vasodilation)*1.33(splanchnic vasoconstriction)
+        this.parameters.getParameter(PARAM.R_p).setExerciseFactorExplanation("exercise: vasodilation of arteries supplying exercising muscles (functional hyperaemia)");
+        this.parameters.getParameter(PARAM.rvr).setExerciseFactor(1 - 0.3*exerciseFactor);
+        this.parameters.getParameter(PARAM.rvr).setExerciseFactorExplanation("exercise: muscle pump effect due to movement of muscles near veins");
+        this.parameters.getParameter(PARAM.baroreflexSetPoint).setExerciseFactor(1 + (4/93)*exerciseFactor);
+        this.parameters.getParameter(PARAM.baroreflexSetPoint).setExerciseFactorExplanation("exercise: resetting of baroreceptors, possibly due to competition for input to NTS from joint and position sensors");
+        this.applyParameters();
+    }
+
+    applyDiseases(ds: Disease[]) {
+        this.parameters.applyDiseases(ds);
+        this.applyParameters();
+    }
 
     evaluatePressures() {
         let timespan = 10;
@@ -56,7 +80,7 @@ export class CirculatorySystem {
             let maxRateFactor = maxHeartRate/p.getParameter(PARAM.rate).getValue();
             p.getParameter(PARAM.rate).setBaroreflexFactor(1 + (maxRateFactor-1)*reflex_coeff);
             p.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
-            this.applyParameters(p);
+            this.applyParameters();
             this.evaluatePressures();
             map = this.getMAP();
             count++;
@@ -67,6 +91,7 @@ export class CirculatorySystem {
             }
         } while (map < set_point-0.3 || map > set_point+0.3);
         console.log('reflex_coeff:',reflex_coeff);
+        this.updateOutputs();
     }
 
     getAorticPressureSequence() {
@@ -106,12 +131,11 @@ export class CirculatorySystem {
         return Math.max(...this.aortapressureseq) - Math.min(...this.aortapressureseq);
     }
 
-    applyParameters(pf: CirculatoryParameters) {
-        this.vasculature.setR_p(pf.getValue(PARAM.R_p));
-        this.vasculature.setR_a(pf.getValue(PARAM.R_a));
-        this.vasculature.setC_a(pf.getValue(PARAM.C_a));
-        this.heart.setParameters(pf);
-        this.parameters = pf;
+    private applyParameters() {
+        this.vasculature.setR_p(this.parameters.getValue(PARAM.R_p));
+        this.vasculature.setR_a(this.parameters.getValue(PARAM.R_a));
+        this.vasculature.setC_a(this.parameters.getValue(PARAM.C_a));
+        this.heart.setParameters(this.parameters);
     }
 
     getParameterSummaries() {
@@ -131,5 +155,24 @@ export class CirculatorySystem {
     getOutputSummaries() {
         this.updateOutputs();
         return this.outputs.getAllOutputSummaries();
+    }
+
+    getOutputValues(): OutputValues {
+        this.updateOutputs();
+        var values: {[id: number]: number} = {};
+        var id: any;
+        for (id of Object.values(OUT)) {
+            values[id] = this.outputs.getValue(id);
+        }
+        return values;
+    }
+
+    getParameterValues(): ParameterValues {
+        var values: {[id: number]: number} = {};
+        var id: any;
+        for (id of Object.values(PARAM)) {
+            values[id] = this.parameters.getValue(id);
+        }
+        return values;
     }
 }

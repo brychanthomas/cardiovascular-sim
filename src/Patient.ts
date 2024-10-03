@@ -1,11 +1,14 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
 import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
+import { ClinicalSigns } from './ClinicalSigns.js';
 
 export class Patient {
 
     private circulation: CirculatorySystem;
     private diseases: Disease[] = [];
+    private diseaseString: string;
+    private clinicalSigns: string[] = [];
 
     constructor() {
         this.circulation = new CirculatorySystem();
@@ -15,16 +18,8 @@ export class Patient {
      * Update circulatory parameters and evaluate pressures for given exercise factor
      */
     computeSteadyState(exerciseFactor: number) {
-        let parameters = new CirculatoryParameters();
-        parameters.applyDiseases(this.diseases);
-        parameters.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.81*exerciseFactor); // TPR drops to 25% = 0.19(vasodilation)*1.33(splanchnic vasoconstriction)
-        parameters.getParameter(PARAM.R_p).setExerciseFactorExplanation("exercise: vasodilation of arteries supplying exercising muscles (functional hyperaemia)");
-        parameters.getParameter(PARAM.rvr).setExerciseFactor(1 - 0.3*exerciseFactor);
-        parameters.getParameter(PARAM.rvr).setExerciseFactorExplanation("exercise: muscle pump effect due to movement of muscles near veins");
-        parameters.getParameter(PARAM.baroreflexSetPoint).setExerciseFactor(1 + (4/93)*exerciseFactor);
-        parameters.getParameter(PARAM.baroreflexSetPoint).setExerciseFactorExplanation("exercise: resetting of baroreceptors, possibly due to competition for input to NTS from joint and position sensors");
-        //pf.setC_aFactor(1 - 0.25*exerciseFactor);
-        this.circulation.applyParameters(parameters);
+        this.circulation.applyDiseases(this.diseases);
+        this.circulation.setExerciseFactor(exerciseFactor);
         this.circulation.baroreflex();
     }
 
@@ -36,14 +31,6 @@ export class Patient {
         return this.circulation.getAorticValveFlowSequence();
     }
 
-    getPressureString() {
-        return this.circulation.getPressureString();
-    }
-
-    getMAP() {
-        return this.circulation.getMAP();
-    }
-
     getCirculatoryParameterSummaries() {
         return this.circulation.getParameterSummaries();
     }
@@ -52,7 +39,30 @@ export class Patient {
         return this.circulation.getOutputSummaries();
     }
 
+    getClinicalSigns() {
+        return this.clinicalSigns;
+    }
+
+    private updateClinicalSigns() {
+        this.circulation.applyDiseases(this.diseases);
+        this.circulation.setExerciseFactor(0);
+        this.circulation.baroreflex();
+        let outsrest = this.circulation.getOutputValues();
+        let paramsrest = this.circulation.getParameterValues();
+        this.circulation.setExerciseFactor(1);
+        this.circulation.baroreflex();
+        let outsexer = this.circulation.getOutputValues();
+        let paramsexer = this.circulation.getParameterValues();
+        this.clinicalSigns = ClinicalSigns.getSigns(paramsrest, outsrest, paramsexer, outsexer);
+    }
+
     setDiseases(ds: Disease[]) {
-        this.diseases = ds;
+        let f = (d)=>d.getName()+d.getSeverity();
+        //only if diseases/severities have changed
+        if (ds.map(f).sort().toString() !== this.diseaseString) {
+            this.diseases = ds;
+            this.diseaseString = ds.map(f).sort().toString();
+            this.updateClinicalSigns();
+        }
     }
 }
