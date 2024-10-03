@@ -70,3 +70,24 @@ export class Hypovolaemia extends Disease {
 
     getName() { return "Hypovolaemia" }
 }
+
+export class Hypervolaemia extends Disease {
+    
+    severityMax = 1000; 
+    severityUnit = 'mL gained';
+    parameterFactorChanges = {
+        [PARAM.msfp]: +1,
+        [PARAM.aorticBackflow]: +1
+    }
+
+    getName() { return "Hypervolaemia" }
+}
+
+export class HeartFailure extends Disease {
+    
+    parameterFactorChanges = {
+        [PARAM.maxStrokeVolume]: -0.8
+    }
+
+    getName() { return "Right sided heart failure" }
+}
