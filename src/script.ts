@@ -18,8 +18,15 @@ X  parameter mouseovers
 X  graph lables and configurable time period
 X  pause button
 X  diseases GUI
--  baroreflex set point parameter
+X  baroreflex set point parameter
+X  graph 'STORE' function
+X  move HTML primitives to static functions - creating box, span, etc
+X  variable disease severity
+X  display disease severity in brackets in factor explanation
+N  fix aortic backflow = 0 during systole
 -  more diseases
+-  fix hypo/hypervolaemia cancelling out
+-  clinical signs: cyanosis, fainting, exercise intolerance, CRT, oedema, shock, dizziness
 -  Starling/Guyton curves?
 -  update graph widths
 */

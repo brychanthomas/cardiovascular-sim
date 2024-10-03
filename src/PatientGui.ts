@@ -260,6 +260,7 @@ const valueGrouping = [{
     valueIds: [
         PARAM.rate,
         OUT.strokeVolume +1000,
+        PARAM.maxStrokeVolume,
         OUT.co +1000,
         PARAM.systoleLength,
         PARAM.aorticBackflow,
