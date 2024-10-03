@@ -1,11 +1,16 @@
-import { Disease, Atherosclerosis, AorticRegurguitation, Hypovolaemia, Hypervolaemia, HeartFailure } from './Disease.js';
+import { Disease, Atherosclerosis, AorticRegurguitation, Hypovolaemia, Hypervolaemia, HeartFailure, Bradycardia, Tachycardia } from './Disease.js';
 
 export class Diseases {
 
     private static diseases: { [id: string]: Disease } = {};
     
     static {
-        let ds: Disease[] = [new Atherosclerosis(), new AorticRegurguitation(), new Hypovolaemia(), new Hypervolaemia(), new HeartFailure()];
+        let ds: Disease[] = [
+            new Atherosclerosis(), new AorticRegurguitation(),
+            new Hypovolaemia(), new Hypervolaemia(),
+            new HeartFailure(), new Bradycardia(),
+            new Tachycardia()
+        ];
         for (var d of ds) {
             this.diseases[d.getName()] = d;
         }

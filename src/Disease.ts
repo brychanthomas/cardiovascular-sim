@@ -52,8 +52,8 @@ export abstract class Disease {
 
 export class Atherosclerosis extends Disease {
     parameterFactorChanges = {
-        [PARAM.C_a]: -0.3,
-        [PARAM.R_a]: +0.2,
+        [PARAM.C_a]: -0.4,
+        [PARAM.R_a]: +0.3,
         //[PARAM.R_p]: 1.2
     }
 
@@ -99,4 +99,22 @@ export class HeartFailure extends Disease {
     }
 
     getName() { return "Right sided heart failure" }
+}
+
+export class Bradycardia extends Disease {
+    
+    parameterFactorChanges = {
+        [PARAM.rate]: -0.7
+    }
+
+    getName() { return "Sinus bradycardia" }
+}
+
+export class Tachycardia extends Disease {
+    
+    parameterFactorChanges = {
+        [PARAM.rate]: +0.8
+    }
+
+    getName() { return "Sinus tachycardia" }
 }

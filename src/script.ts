@@ -25,7 +25,7 @@ X  variable disease severity
 X  display disease severity in brackets in factor explanation
 N  fix aortic backflow = 0 during systole
 -  more diseases
--  fix hypo/hypervolaemia cancelling out
+X  fix hypo/hypervolaemia cancelling out
 -  clinical signs: cyanosis, fainting, exercise intolerance, CRT, oedema, shock, dizziness
 -  Starling/Guyton curves?
 -  update graph widths
