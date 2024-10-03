@@ -109,7 +109,7 @@ export class PatientGui {
         var modifiers = [];
         if (s.exerciseFactor) { modifiers.push(s.exerciseFactor); }
         if (s.baroreflexFactor) { modifiers.push(s.baroreflexFactor); }
-        modifiers = modifiers.concat(s.diseaseFactors);
+        modifiers = s.diseaseFactors.concat(modifiers);
         if (modifiers.length>0) {
             text += '<ul><li><span>';
             text += modifiers.join("</span></li><li><span>");

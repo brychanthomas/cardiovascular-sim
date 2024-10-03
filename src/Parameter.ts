@@ -2,6 +2,7 @@ export class Parameter {
 
     protected baseValue: number;
     protected diseaseFactors: number[] = [];
+    protected diseaseAdditors: number[] = [];
     protected baroreflexFactor = 1;
     protected exerciseFactor = 1;
 
@@ -9,9 +10,11 @@ export class Parameter {
         this.baseValue = base;
     }
 
-    setDiseaseFactors(fs: number[]) {
-        this.diseaseFactors = fs;
+    setDiseaseModifiers(factors: number[], additors: number[]) {
+        this.diseaseFactors = factors;
+        this.diseaseAdditors = additors;
         this.diseaseFactors.push(1);
+        this.diseaseAdditors.push(0);
     }
 
     setBaroreflexFactor(f: number) {
@@ -23,6 +26,7 @@ export class Parameter {
     }
 
     getValue() {
-        return this.baseValue * this.diseaseFactors.reduce((a,b)=>a*b) * this.baroreflexFactor * this.exerciseFactor;
+        let added = (this.baseValue + this.baseValue * this.diseaseAdditors.reduce((a,b)=>a+b))
+        return added * this.diseaseFactors.reduce((a,b)=>a*b) * this.baroreflexFactor * this.exerciseFactor;
     }
 }

@@ -89,16 +89,23 @@ export class CirculatoryParameters {
         var param: any;
         for (param in Object.values(PARAM)) { // for each parameter
             var factors = [];
-            var diseaseNames = [];
+            var factorDiseaseNames = [];
+            var additors = [];
+            var additorDiseaseNames = [];
             for (var i=0; i<diseases.length; i++) { // for each disease
                 let diseaseFactors = diseases[i].getFactors();
                 if (param in diseaseFactors) { // if disease modifies parameter
                     factors.push(diseaseFactors[param]);
-                    diseaseNames.push(diseases[i].getName() + ' (' + diseases[i].getSeverity()+diseases[i].getSeverityUnit()+')');
+                    factorDiseaseNames.push(diseases[i].getName() + ' (' + diseases[i].getSeverity()+diseases[i].getSeverityUnit()+')');
+                }
+                let diseaseAdditors = diseases[i].getAdditors();
+                if (param in diseaseAdditors) { // if disease modifies parameter
+                    additors.push(diseaseAdditors[param]);
+                    additorDiseaseNames.push(diseases[i].getName() + ' (' + diseases[i].getSeverity()+diseases[i].getSeverityUnit()+')');
                 }
             }
-            this.getParameter(param).setDiseaseFactors(factors);
-            this.getParameter(param).setDiseaseFactorExplanations(diseaseNames);
+            this.getParameter(param).setDiseaseModifiers(factors, additors);
+            this.getParameter(param).setDiseaseModifierExplanations(factorDiseaseNames, additorDiseaseNames);
         }
     }
 

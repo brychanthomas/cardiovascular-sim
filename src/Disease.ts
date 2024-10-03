@@ -3,6 +3,7 @@ import { PARAM } from './CirculatoryParameters.js';
 export abstract class Disease {
 
     protected parameterFactorChanges: { [id: number] : number };
+    protected parameterAdditiveChanges: { [id: number] : number };
     protected severity: number = 0;
     protected severityMax = 100; 
     protected severityUnit = '%';
@@ -13,6 +14,14 @@ export abstract class Disease {
             factors[id] = 1 + this.parameterFactorChanges[id]*this.severity;
         }
         return factors;
+    }
+
+    getAdditors() {
+        var additors: { [id: number] : number } = {};
+        for (var id in this.parameterAdditiveChanges) {
+            additors[id] = this.parameterAdditiveChanges[id]*this.severity;
+        }
+        return additors;
     }
 
     /**
@@ -63,7 +72,7 @@ export class Hypovolaemia extends Disease {
     
     severityMax = 1000; 
     severityUnit = 'mL lost';
-    parameterFactorChanges = {
+    parameterAdditiveChanges = {
         [PARAM.msfp]: -1,
         [PARAM.aorticBackflow]: -1
     }
@@ -75,7 +84,7 @@ export class Hypervolaemia extends Disease {
     
     severityMax = 1000; 
     severityUnit = 'mL gained';
-    parameterFactorChanges = {
+    parameterAdditiveChanges = {
         [PARAM.msfp]: +1,
         [PARAM.aorticBackflow]: +1
     }

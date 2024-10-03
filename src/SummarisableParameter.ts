@@ -18,6 +18,7 @@ export class SummarisableParameter extends Parameter {
     private exerciseFactorExplanation: string = '';
     private baroreflexFactorExplanation: string = '';
     private diseaseFactorExplanations: string[] = [];
+    private diseaseAdditorExplanations: string[] = [];
 
     setUnit(unit: string) {
         this.unit = unit;
@@ -39,23 +40,27 @@ export class SummarisableParameter extends Parameter {
         this.baroreflexFactorExplanation = exp;
     }
 
-    setDiseaseFactorExplanations(exps: string[]) {
-        this.diseaseFactorExplanations = exps;
+    setDiseaseModifierExplanations(factorExps: string[], additorExps: string[]) {
+        this.diseaseFactorExplanations = factorExps;
+        this.diseaseAdditorExplanations = additorExps;
     }
 
     getSummary(): ParameterSummary {
-        var diseaseFactors = [];
+        var diseaseModifiers = [];
+        for (var i = 0; i<this.diseaseAdditorExplanations.length; i++) {
+            diseaseModifiers.push('(+)'+this.round(this.diseaseAdditors[i])+'x - ' + this.diseaseAdditorExplanations[i]);
+        }
         for (var i = 0; i<this.diseaseFactorExplanations.length; i++) {
-            diseaseFactors.push(this.round(this.diseaseFactors[i]) + 'x - ' + this.diseaseFactorExplanations[i]);
+            diseaseModifiers.push('(×)'+this.round(this.diseaseFactors[i]) + ' - ' + this.diseaseFactorExplanations[i]);
         }
         return {
             name: this.formattedName,
             description: this.description,
             base: this.baseValue.toPrecision(3) + ' ' + this.unit,
             value: this.getValue().toPrecision(3) + ' ' + this.unit,
-            exerciseFactor: (this.round(this.exerciseFactor) === 1) ? '' : this.round(this.exerciseFactor) + 'x - ' + this.exerciseFactorExplanation,
-            baroreflexFactor: (this.round(this.baroreflexFactor) === 1) ? '' : this.round(this.baroreflexFactor) + 'x - ' + this.baroreflexFactorExplanation,
-            diseaseFactors: diseaseFactors
+            exerciseFactor: (this.round(this.exerciseFactor) === 1) ? '' : '(×)'+this.round(this.exerciseFactor) + ' - ' + this.exerciseFactorExplanation,
+            baroreflexFactor: (this.round(this.baroreflexFactor) === 1) ? '' : '(×)'+this.round(this.baroreflexFactor) + ' - ' + this.baroreflexFactorExplanation,
+            diseaseFactors: diseaseModifiers
         }
     }
 
