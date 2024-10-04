@@ -54,7 +54,8 @@ export class Atherosclerosis extends Disease {
     parameterFactorChanges = {
         [PARAM.C_a]: -0.4,
         [PARAM.R_a]: +0.3,
-        //[PARAM.R_p]: 1.2
+        [PARAM.R_p]: +0.2,
+        [PARAM.baroreflexSetPoint]: +0.2
     }
 
     getName() { return "Atherosclerosis" }
