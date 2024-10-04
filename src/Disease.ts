@@ -62,7 +62,7 @@ export class Atherosclerosis extends Disease {
 
 export class AorticRegurguitation extends Disease {
     parameterFactorChanges = {
-        [PARAM.aorticBackflow]: +399
+        [PARAM.aorticBackflow]: +799
     }
 
     getName() { return "Aortic regurguitation" }
