@@ -57,14 +57,15 @@ export class CirculatorySystem {
     baroreflex() {
         this.evaluatePressures();
         var map = this.getMAP();
+        const tolerance = 0.1;
         var reflex_coeff = 0;
         var set_point = this.parameters.getValue(PARAM.baroreflexSetPoint);
         let count = 0;
         let p = this.parameters;
         do {
-            if (map < set_point-0.3) {
+            if (map < set_point-tolerance) {
                 reflex_coeff += Math.min(Math.pow(0.9, count), 0.2);
-            } else if (map > set_point+0.3) {
+            } else if (map > set_point+tolerance) {
                 reflex_coeff -= Math.min(Math.pow(0.9, count), 0.2);
             }
             reflex_coeff = Math.min(reflex_coeff, 1);
@@ -84,12 +85,12 @@ export class CirculatorySystem {
             this.evaluatePressures();
             map = this.getMAP();
             count++;
-            if (count > 200) {
+            if (count > 250) {
                 console.log("BAROREFLEX FAILED");
                 console.log('reflex_coeff:',reflex_coeff);
                 return;
             }
-        } while (map < set_point-0.3 || map > set_point+0.3);
+        } while (map < set_point-tolerance || map > set_point+tolerance);
         console.log('reflex_coeff:',reflex_coeff);
         this.updateOutputs();
     }
