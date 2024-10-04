@@ -22,6 +22,7 @@ export class PatientGui {
     private time = 0;
     private paused = false;
     private exerciseSlider: HTMLInputElement;
+    private clinicalSignsBox: HTMLElement;
 
     constructor(patientRerunCallback:(e:number)=>void, patientDiseaseSetCallback:(d:Disease[])=>void) {
         var wrapper = document.createElement("div");
@@ -34,10 +35,15 @@ export class PatientGui {
         this.initControls(leftDiv, patientRerunCallback);
         this.initCanvas(leftDiv);
 
+        var middleDiv = document.createElement("div");
+        middleDiv.classList.add("leftFloat");
+        wrapper.appendChild(middleDiv);
+        this.initValueLabels(middleDiv);
+
         var rightDiv = document.createElement("div");
-        rightDiv.classList.add("leftFloat");
+        rightDiv.id = "rightDiv";
         wrapper.appendChild(rightDiv);
-        this.initValueLabels(rightDiv);
+        this.initClinicalSigns(rightDiv);
 
         this.initDiseaseGui(patientRerunCallback, patientDiseaseSetCallback);
     }
@@ -239,6 +245,27 @@ export class PatientGui {
             div.style.display = 'none';
          }.bind(this);
         div.appendChild(closeButton);
+    }
+
+    initClinicalSigns(parent: HTMLElement) {
+        this.clinicalSignsBox = HTMLPrimitives.groupBox(parent, "Clinical signs");
+        this.clinicalSignsBox.style.marginLeft = "10px";
+        HTMLPrimitives.span(this.clinicalSignsBox, "None").classList.add("clinicalSigns");
+    }
+
+    setClinicalSigns(signs: string[]) {
+        this.clinicalSignsBox.innerHTML = '';
+        HTMLPrimitives.span(this.clinicalSignsBox, "Clinical signs", true).classList.add("groupingBoxTitle");
+        if (signs.length === 0) {
+            HTMLPrimitives.span(this.clinicalSignsBox, "None");
+        } else {
+            var html = '<ul>';
+            for (var i = 0; i<signs.length; i++) {
+                //this.clinicalSignsBox.appendChild(document.createElement("br"));
+                html += '<li><span>'+signs[i]+'</span></li>';
+            }
+            this.clinicalSignsBox.innerHTML += html + '</ul>';
+        }
     }
 
 }

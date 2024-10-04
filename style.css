@@ -73,3 +73,9 @@ ul {
 table {
     color: inherit;
 }
+
+#rightDiv {
+    float: none;
+    overflow: hidden;
+    margin-right: 10px;
+}

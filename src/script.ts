@@ -43,10 +43,10 @@ function simulateAndRenderPatient(idx: number, exercise: number) {
     patients[idx].computeSteadyState(exercise);
     var pressures = patients[idx].getAorticPressureSequence();
     var flows = patients[idx].getAorticValveFlowSequence();
-    console.log(patients[idx].getPressureString());
-    console.log(patients[idx].getMAP());
     patientGuis[idx].setGraphSequences(pressures, flows);
     patientGuis[idx].setValues(patients[idx].getCirculatoryParameterSummaries(), patients[idx].getCirculatoryOutputSummaries());
+    patientGuis[idx].setClinicalSigns(patients[idx].getClinicalSigns());
+    console.log(patients[idx].getClinicalSigns());
 }
 
 initPatient();
