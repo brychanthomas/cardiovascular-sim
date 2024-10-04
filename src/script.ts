@@ -1,5 +1,6 @@
 import {Patient} from './Patient.js'
 import {PatientGui} from './PatientGui.js';
+import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
   
 var patients: Patient[] = [];
 var patientGuis: PatientGui[] = [];
@@ -41,9 +42,11 @@ function initPatient() {
 
 function simulateAndRenderPatient(idx: number, exercise: number) {
     patients[idx].computeSteadyState(exercise);
-    var pressures = patients[idx].getAorticPressureSequence();
-    var flows = patients[idx].getAorticValveFlowSequence();
-    patientGuis[idx].setGraphSequences(pressures, flows);
+    var pressureTimeseries = patients[idx].getAorticPressureTimeseries();
+    var repeatingPressures = new RepeatingTimeSequence(pressureTimeseries.t, pressureTimeseries.p);
+    var flowTimeseries = patients[idx].getAorticValveFlowTimeseries();
+    var repeatingFlows = new RepeatingTimeSequence(flowTimeseries.t, flowTimeseries.f);
+    patientGuis[idx].setGraphSequences(repeatingPressures, repeatingFlows);
     patientGuis[idx].setValues(patients[idx].getCirculatoryParameterSummaries(), patients[idx].getCirculatoryOutputSummaries());
     patientGuis[idx].setClinicalSigns(patients[idx].getClinicalSigns());
 }

@@ -1,6 +1,5 @@
 import { CirculatorySystem } from './CirculatorySystem.js';
 import { Disease } from './Disease.js';
-import { CirculatoryParameters, PARAM } from './CirculatoryParameters.js';
 import { ClinicalSigns } from './ClinicalSigns.js';
 
 export class Patient {
@@ -23,12 +22,12 @@ export class Patient {
         this.circulation.baroreflex();
     }
 
-    getAorticPressureSequence() {
-        return this.circulation.getAorticPressureSequence();
+    getAorticPressureTimeseries() {
+        return this.circulation.getAorticPressureTimeseries();
     }
 
-    getAorticValveFlowSequence() {
-        return this.circulation.getAorticValveFlowSequence();
+    getAorticValveFlowTimeseries() {
+        return this.circulation.getAorticValveFlowTimeseries();
     }
 
     getCirculatoryParameterSummaries() {

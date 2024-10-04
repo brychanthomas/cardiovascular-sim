@@ -1,6 +1,5 @@
 import { Heart } from './Heart.js';
 import { Vasculature } from './Vasculature.js';
-import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
 import { PARAM, CirculatoryParameters } from './CirculatoryParameters.js';
 import { OUT, CirculatoryOutputs } from './CirculatoryOutputs.js';
 import { Disease } from './Disease.js'
@@ -95,11 +94,11 @@ export class CirculatorySystem {
         this.updateOutputs();
     }
 
-    getAorticPressureSequence() {
-        return new RepeatingTimeSequence(this.aortatimeseq, this.aortapressureseq);
+    getAorticPressureTimeseries() {
+        return {t:this.aortatimeseq, p:this.aortapressureseq};
     }
 
-    getAorticValveFlowSequence() {
+    getAorticValveFlowTimeseries() {
         let timeseq = [];
         let flowseq = [];
         let T = 60/this.heart.getRate()
@@ -107,7 +106,7 @@ export class CirculatorySystem {
             timeseq.push(i*T/100);
             flowseq.push(this.heart.getFlow(i*T/100));
         }
-        return new RepeatingTimeSequence(timeseq, flowseq);
+        return {t:timeseq, f:flowseq};
     }
 
     getPressureString() {
