@@ -4,7 +4,7 @@ import { PARAM } from './CirculatoryParameters.js';
 import { ParameterSummary } from './SummarisableParameter.js';
 import { OUT } from './CirculatoryOutputs.js';
 import { OutputSummary } from './Output.js';
-import { Diseases } from './Diseases.js';
+import { DiseaseStore } from './Diseases.js';
 import type { Disease } from './Disease.js';
 import { HTMLPrimitives } from './HTMLPrimitives.js';
 
@@ -217,7 +217,7 @@ export class PatientGui {
         var tbl = document.createElement("table");
         div.appendChild(tbl);
         tbl.innerHTML = '<tr><th>Name</th><th>Severity</th></tr>';
-        for (var disease of Diseases.getAllDiseaseNames()) {
+        for (var disease of DiseaseStore.getAllDiseaseNames()) {
             var row = document.createElement('tr');
             var label = document.createElement("label");
             var input = document.createElement("input");
@@ -231,7 +231,7 @@ export class PatientGui {
             label.appendChild(td);
             row.appendChild(label);
             td = document.createElement('td');
-            let diseaseObj = Diseases.getDiseaseFromName(disease);
+            let diseaseObj = DiseaseStore.getDiseaseFromName(disease);
             let severitySlider = HTMLPrimitives.slider(td, '', diseaseObj.getMaxSeverity(), diseaseObj.getSeverityUnit());
             severitySlider.addEventListener("change", function() {
                 diseaseObj.setSeverity(Number(severitySlider.value));
@@ -246,7 +246,7 @@ export class PatientGui {
             var checkedBoxes = document.querySelectorAll('input[name=diseaseCheckbox]:checked');
             var diseases: string[] = [];
             for (var box of checkedBoxes) { diseases.push((<HTMLInputElement>box).value) }
-            patientDiseaseSetCallback(Diseases.getDiseaseListFromNameList(diseases));
+            patientDiseaseSetCallback(DiseaseStore.getDiseaseListFromNameList(diseases));
             patientRerunCallback(Number(this.exerciseSlider.value)/100);
             div.style.display = 'none';
          }.bind(this);

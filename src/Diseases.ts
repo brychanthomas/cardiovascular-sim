@@ -1,6 +1,6 @@
 import { Disease, Atherosclerosis, AorticRegurguitation, Hypovolaemia, Hypervolaemia, HeartFailure, Bradycardia, Tachycardia } from './Disease.js';
 
-export class Diseases {
+export class DiseaseStore {
 
     private static diseases: { [id: string]: Disease } = {};
     
