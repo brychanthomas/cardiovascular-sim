@@ -44,15 +44,16 @@ export class Patient {
     }
 
     private updateClinicalSigns() {
-        this.circulation.applyDiseases(this.diseases);
-        this.circulation.setExerciseFactor(0);
-        this.circulation.baroreflex();
-        let outsrest = this.circulation.getOutputValues();
-        let paramsrest = this.circulation.getParameterValues();
-        this.circulation.setExerciseFactor(1);
-        this.circulation.baroreflex();
-        let outsexer = this.circulation.getOutputValues();
-        let paramsexer = this.circulation.getParameterValues();
+        let c = new CirculatorySystem();
+        c.applyDiseases(this.diseases);
+        c.setExerciseFactor(0);
+        c.baroreflex();
+        let outsrest = c.getOutputValues();
+        let paramsrest = c.getParameterValues();
+        c.setExerciseFactor(1);
+        c.baroreflex();
+        let outsexer = c.getOutputValues();
+        let paramsexer = c.getParameterValues();
         this.clinicalSigns = ClinicalSigns.getSigns(paramsrest, outsrest, paramsexer, outsexer);
     }
 
