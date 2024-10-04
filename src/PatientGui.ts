@@ -61,6 +61,12 @@ export class PatientGui {
         this.flowGraph = new Graph(canvas, 60, 260, ctx.canvas.width - 100, 200, 5);
         this.flowGraph.setYLabel("Aortic valve flow (mL/s)");
 
+        window.addEventListener('resize', function() {
+            ctx.canvas.width = window.innerWidth/1.8;
+            this.pressureGraph.setWidth(ctx.canvas.width - 100);
+            this.flowGraph.setWidth(ctx.canvas.width - 100);
+        }.bind(this), true);
+
     }
 
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {

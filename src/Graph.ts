@@ -212,4 +212,12 @@ export class Graph {
         }.bind(this);
     }
 
+    setWidth(w: number) {
+        this.context.clearRect(this.basex-50, this.basey-15, this.width+60, this.height+30);
+        this.width = w;
+        this.drawTicksAndLabels();
+        this.drawAxes();
+        this.drawValues();
+    }
+
 }

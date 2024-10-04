@@ -26,9 +26,9 @@ X  display disease severity in brackets in factor explanation
 N  fix aortic backflow = 0 during systole
 -  more diseases
 X  fix hypo/hypervolaemia cancelling out
--  clinical signs: cyanosis, fainting, exercise intolerance, CRT, oedema, shock, dizziness
+X  clinical signs: cyanosis, fainting, exercise intolerance, CRT, oedema, shock, dizziness
 -  Starling/Guyton curves?
--  update graph widths
+X  update graph widths
 */
 
 function initPatient() {
@@ -46,7 +46,6 @@ function simulateAndRenderPatient(idx: number, exercise: number) {
     patientGuis[idx].setGraphSequences(pressures, flows);
     patientGuis[idx].setValues(patients[idx].getCirculatoryParameterSummaries(), patients[idx].getCirculatoryOutputSummaries());
     patientGuis[idx].setClinicalSigns(patients[idx].getClinicalSigns());
-    console.log(patients[idx].getClinicalSigns());
 }
 
 initPatient();
