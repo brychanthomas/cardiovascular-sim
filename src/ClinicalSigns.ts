@@ -24,18 +24,17 @@ export class ClinicalSigns {
 
     private static oedema(outsrest: OutputValues) {
         let rap = outsrest[OUT.rap];
-        console.log('rap', rap);
         return (rap > 7) ? "Peripheral oedema" : null;
     }
 
     private static exerciseIntolerance(outsexer: OutputValues) {
         let map = outsexer[OUT.map];
-        return (map < 90) ? "Exercise intolerance" : null;
+        return (map < 95) ? "Exercise intolerance" : null;
     }
 
     private static increasedCRT(paramsrest: ParameterValues) {
         let R_p = paramsrest[PARAM.R_p];
-        return (R_p > 1.2) ? "Increased capillary refill time" : null;
+        return (R_p >= 1.2) ? "Increased capillary refill time" : null;
     }
 
     private static tachycardia(paramsrest: ParameterValues) {
