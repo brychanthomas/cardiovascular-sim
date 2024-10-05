@@ -1,6 +1,7 @@
 import { Disease } from './Disease.js';
 import { ParameterSummary, SummarisableParameter } from './SummarisableParameter.js';
 
+/** mapping of readable parameter name to numerical ID (like an enum) */
 export const PARAM = {
     R_p: 0,
     R_a: 1,
@@ -15,6 +16,7 @@ export const PARAM = {
     baroreflexSetPoint: 10
 }
 
+/** Mapping of parameter ID to base value */
 const baseValues = {
     [PARAM.R_p]: 1,                // mmHg s/mL
     [PARAM.R_a]: 0.03,             // mmHg s/mL
@@ -29,6 +31,7 @@ const baseValues = {
     [PARAM.baroreflexSetPoint]: 93 // mmHg
 }
 
+/** Mapping of parameter ID to unit */
 const units = {
     [PARAM.R_p]: 'mmHg s/mL',
     [PARAM.R_a]: 'mmHg s/mL',
@@ -43,6 +46,7 @@ const units = {
     [PARAM.baroreflexSetPoint]: 'mmHg'
 }
 
+/** Mapping of parameter ID to HTML-formatted name */
 const formattedNames = {
     [PARAM.R_p]: 'R<sub>p</sub>',
     [PARAM.R_a]: 'R<sub>a</sub>',
@@ -57,6 +61,7 @@ const formattedNames = {
     [PARAM.baroreflexSetPoint]: 'SP'
 }
 
+/** Mapping of parameter ID to description */
 const descriptions = {
     [PARAM.R_p]: 'Peripheral resistance',
     [PARAM.R_a]: 'Resistance of proximal arteries',
@@ -71,6 +76,9 @@ const descriptions = {
     [PARAM.baroreflexSetPoint]: 'Baroreflex set point'
 }
 
+/**
+ * Stores all SummarisableParameter objects needed by CirculatorySystem
+ */
 export class CirculatoryParameters {
 
     private parameters: { [id: number]: SummarisableParameter };
@@ -85,6 +93,12 @@ export class CirculatoryParameters {
         }
     }
 
+    /**
+     * Adjust parameter values (via disease factor and disease additor) based 
+     * upon list of active Disease objects - overwrites any diseases previously
+     * applied
+     * @param diseases list of Disease objects
+     */
     applyDiseases(diseases: Disease[]) {
         var param: any;
         for (param in Object.values(PARAM)) { // for each parameter
@@ -109,14 +123,28 @@ export class CirculatoryParameters {
         }
     }
 
+    /**
+     * Get SummarisableParameter object from parameter ID
+     * @param id parameter ID
+     * @returns SummarisableParameter object
+     */
     getParameter(id: number) {
         return this.parameters[id];
     }
 
+    /**
+     * Get numerical parameter value from parameter ID
+     * @param id parameter ID
+     * @returns numerical value of parameter
+     */
     getValue(id: number) {
         return this.parameters[id].getValue();
     }
 
+    /**
+     * Get ParameterSummary object for every parameter
+     * @returns object mapping parameter ID to ParameterSummary for every parameter
+     */
     getAllParameterSummaries() {
         var summaries: {[id: number]: ParameterSummary} = {};
         var param: any;
