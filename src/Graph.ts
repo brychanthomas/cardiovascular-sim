@@ -1,3 +1,6 @@
+/**
+ * Line graph showing real-time data drawn on canvas element
+ */
 export class Graph {
 
     private context: CanvasRenderingContext2D;
@@ -15,7 +18,16 @@ export class Graph {
     private storevs: number[] = [];
     private ylabel: string;
 
-    constructor(canvas: HTMLCanvasElement, basex, basey, width, height, timespan) {
+    /**
+     * Construct Graph object
+     * @param canvas canvas element to draw graph on
+     * @param basex x coordinate of top left corner within canvas
+     * @param basey y coordinate of top left corner within canvas
+     * @param width width of graph in pixels
+     * @param height height of graph in pixels
+     * @param timespan span of data to show on graph (seconds)
+     */
+    constructor(canvas: HTMLCanvasElement, basex: number, basey: number, width: number, height: number, timespan: number) {
         this.context = canvas.getContext("2d");
         this.basex = basex;
         this.basey = basey;
@@ -29,16 +41,20 @@ export class Graph {
         this.initTimePeriodSelect(canvas);
     }
 
+    /**
+     * Set y axis label of graph
+     * @param lbl y label
+     */
     setYLabel(lbl: string) {
         this.ylabel = lbl;
     }
 
     /**
-     * Draw a line from (x0, y0) to (x1, y1)
-     * @param x0 
-     * @param y0 
-     * @param x1 
-     * @param y1 
+     * Draw a straight line from (x0, y0) to (x1, y1)
+     * @param x0 x coordinate of start point
+     * @param y0 y coordinate of start point
+     * @param x1 x coordinate of end point
+     * @param y1 y coordinate of end point
      */
     private line(x0: number, y0: number, x1: number, y1: number) {
         this.context.beginPath();
@@ -47,16 +63,31 @@ export class Graph {
         this.context.stroke();
     }
 
+    /**
+     * Convert time value of a point to x coordinate
+     * @param t time
+     * @returns x coordinate
+     */
     private timetox(t: number): number {
         var maxt = this.ts[this.ts.length-1];
         return this.basex+1+(this.width-1)*(t-maxt+this.timespan)/this.timespan;
     }
 
+    /**
+     * Convert time value of a stored point (not live) to x coordinate
+     * @param t 
+     * @returns 
+     */
     private storedtimetox(t: number): number {
         var maxt = this.storets[this.storets.length-1];
         return this.basex+1+(this.width-1)*(t-maxt+this.timespan)/this.timespan;
     }
 
+    /**
+     * Convert value of a point to y coordinate
+     * @param v value
+     * @returns y coordinate
+     */
     private valtoy(v: number): number {
         var maxv = this.maxval;
         var minv = this.minval;
@@ -67,6 +98,9 @@ export class Graph {
         return y;
     }
 
+    /**
+     * Draw x and y axis of graph (x axis only if zero within range of graphed values)
+     */
     drawAxes() {
         this.context.strokeStyle = "white";
         this.line(this.basex, this.basey, this.basex, this.basey+this.height);
@@ -76,6 +110,9 @@ export class Graph {
         }
     }
 
+    /**
+     * Draw ticks on x and y axes, plus y label if one has been set
+     */
     drawTicksAndLabels() {
         this.context.clearRect(this.basex-50, this.basey-15, 50, this.height+30);
         this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
@@ -84,6 +121,10 @@ export class Graph {
         this.drawXTicks();
     }
 
+    /**
+     * Draw ticks along y axis: one at max value rounded up to nearest 10, one at
+     * min value rounded down to nearest 10, one at zero if within range
+     */
     private drawYTicks() {
         this.context.font = "13px Arial";
         this.context.fillStyle = "white";
@@ -102,6 +143,10 @@ export class Graph {
         }
     }
 
+    /**
+     * Draw ticks along x axis: one for each increment if timespan is odd, 
+     * one every 2 increments if even
+     */
     private drawXTicks() {
         this.context.textAlign = "center";
         var increment = (this.timespan % 2 === 0) ? 2 : 1;
@@ -115,6 +160,9 @@ export class Graph {
         }
     }
 
+    /**
+     * Draw y label rotated 90 deg
+     */
     private drawYLabel() {
         if (this.ylabel) {
             this.context.font = "16px Arial";
@@ -127,7 +175,12 @@ export class Graph {
         }
     }
 
-    addValue(t, v) {
+    /**
+     * Add live value to be drawn on graph next time drawValues called
+     * @param t time
+     * @param v value
+     */
+    addValue(t: number, v: number) {
         this.ts.push(t);
         this.vs.push(v);
         if (v>this.maxval || this.maxval === null) {
@@ -143,6 +196,9 @@ export class Graph {
         }
     }
 
+    /**
+     * Clear graph and redraw live values plus stored values if present
+     */
     drawValues() {
         this.context.clearRect(this.basex, this.basey-1, this.width+1, this.height+2)
         this.drawAxes();
@@ -157,6 +213,11 @@ export class Graph {
         this.plotArrays(this.ts.map(this.timetox.bind(this)), this.vs.map(this.valtoy.bind(this)));
     }
 
+    /**
+     * Plot lines between collection of points
+     * @param xs x coordinates of points
+     * @param ys y coordinates of points
+     */
     private plotArrays(xs: number[], ys: number[]) {
         this.context.beginPath();
         let startidx = 0;
@@ -170,6 +231,9 @@ export class Graph {
         this.context.stroke();
     }
 
+    /**
+     * Clear live values currently being displayed
+     */
     clearValues() {
         this.minval = Math.floor(Math.min(...this.storevs)/10)*10;
         this.maxval = Math.ceil(Math.max(...this.storevs)/10)*10;
@@ -178,11 +242,17 @@ export class Graph {
         this.drawTicksAndLabels();
     }
 
+    /**
+     * Store current live values
+     */
     store() {
         this.storets = this.ts.slice();
         this.storevs = this.vs.slice();
     }
 
+    /**
+     * Clear stored values
+     */
     clearStored() {
         this.storets = [];
         this.storevs = [];
@@ -191,6 +261,10 @@ export class Graph {
         this.drawTicksAndLabels();
     }
 
+    /**
+     * Create dropdown for selecting time period of graph
+     * @param canvas HTMLCanvasElement graph is drawn on
+     */
     private initTimePeriodSelect(canvas: HTMLElement) {
         var div = canvas.parentElement;
         var canvasPos = canvas.getBoundingClientRect();
@@ -212,6 +286,10 @@ export class Graph {
         }.bind(this);
     }
 
+    /**
+     * Set width of graph in pixels
+     * @param w width of graph
+     */
     setWidth(w: number) {
         this.context.clearRect(this.basex-50, this.basey-15, this.width+60, this.height+30);
         this.width = w;
