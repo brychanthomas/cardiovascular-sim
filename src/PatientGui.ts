@@ -1,5 +1,5 @@
 import { Graph } from './Graph.js';
-import { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
+import type { RepeatingTimeSequence } from './RepeatingTimeSequence.js';
 import { PARAM } from './CirculatoryParameters.js';
 import { ParameterSummary } from './SummarisableParameter.js';
 import { OUT } from './CirculatoryOutputs.js';
@@ -12,6 +12,10 @@ interface HTMLElementStore {
     [key: string]: HTMLElement;
  }
 
+ /**
+  * Creates DOM user interface, updates values displayed and accepts user 
+  * input using callback functions.
+  */
 export class PatientGui {
 
     private pressureGraph: Graph;
@@ -48,6 +52,10 @@ export class PatientGui {
         this.initDiseaseGui(patientRerunCallback, patientDiseaseSetCallback);
     }
 
+    /**
+     * Create canvas DOM element and two Graph objects to write to it
+     * @param parent parent element for canvas
+     */
     private initCanvas(parent: HTMLElement) {
         var canvas = document.createElement("canvas");
         parent.appendChild(canvas);
@@ -69,6 +77,11 @@ export class PatientGui {
 
     }
 
+    /**
+     * Create exercise intensity slider
+     * @param parent parent element for slider
+     * @param patientRerunCallback callback function for when slider moved
+     */
     private initExerciseSlider(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
         this.exerciseSlider = HTMLPrimitives.slider(parent, "Exercise intensity: ", 100, '%');
         this.exerciseSlider.addEventListener("change", function() {
@@ -77,6 +90,10 @@ export class PatientGui {
         parent.appendChild(document.createElement('br'));
     }
 
+    /**
+     * Create elements to display parameter and output values plus pop-up hover boxes
+     * @param parent parent to create elements inside
+     */
     private initValueLabels(parent: HTMLElement) {
         //parameter has its normal ID, output has +1000
         for (var group of valueGrouping) {
@@ -98,6 +115,11 @@ export class PatientGui {
         }
     }
 
+    /**
+     * Update displayed parameter and output values
+     * @param parameters object mapping parameter ID to ParameterSummary for all parameters
+     * @param outputs object mapping output ID to OutputSummary for all outputs
+     */
     setValues(parameters: { [id: number]: ParameterSummary }, outputs: { [id: number]: OutputSummary }) {
         for (var idStr of Object.keys(this.valueLabels)) {
             var id = Number(idStr)
@@ -115,6 +137,11 @@ export class PatientGui {
         }
     }
 
+    /**
+     * Convert ParameterSummary to text to be displayed in hover box
+     * @param s ParameterSummary object
+     * @returns HTML showing description, base value and factor list
+     */
     private parameterSummaryToText(s: ParameterSummary) {
         var text = `<span><b>${s.description}</b> (input)</span><br>
                     <span>Base value: ${s.base}</span><br><hr>`;
@@ -132,6 +159,11 @@ export class PatientGui {
         return text;
     }
 
+    /**
+     * Set sequences to be displayed in pressure and flow graphs
+     * @param pressures RepeatingTimeSequence of pressure over one beat
+     * @param flows RepeatingTimeSequence of flow over one beat
+     */
     setGraphSequences(pressures: RepeatingTimeSequence, flows: RepeatingTimeSequence) {
         if (this.intervalId != -1) {
             clearInterval(this.intervalId);
@@ -164,6 +196,12 @@ export class PatientGui {
         }.bind(this), 50);
     }
 
+    /**
+     * Create box with control buttons (pause, store, clear, diseases) and 
+     * exercise slider 
+     * @param parent element to place box inside
+     * @param patientRerunCallback callback for when exercise slider moved
+     */
     private initControls(parent: HTMLElement, patientRerunCallback:(e:number)=>void) {
         var div = HTMLPrimitives.groupBox(parent, "Controls");
         div.style.marginLeft = '60px';
@@ -210,6 +248,12 @@ export class PatientGui {
         diseasesButton.style.width = '5em';
     }
 
+    /**
+     * Create disease GUI (window) - listing of diseases with checkboxes and
+     * intensity sliders
+     * @param patientRerunCallback callback to resimulate patient with given exercise intensity
+     * @param patientDiseaseSetCallback callback to set diseases patient is afflicted by
+     */
     private initDiseaseGui(patientRerunCallback:(e:number)=>void, patientDiseaseSetCallback:(d:Disease[])=>void) {
         var div = document.createElement("div");
         div.id = "diseaseWindow";
@@ -253,12 +297,20 @@ export class PatientGui {
         div.appendChild(closeButton);
     }
 
-    initClinicalSigns(parent: HTMLElement) {
+    /**
+     * Create box to list clinical signs
+     * @param parent element to create box within
+     */
+    private initClinicalSigns(parent: HTMLElement) {
         this.clinicalSignsBox = HTMLPrimitives.groupBox(parent, "Clinical signs");
         this.clinicalSignsBox.style.marginLeft = "10px";
         HTMLPrimitives.span(this.clinicalSignsBox, "None").classList.add("clinicalSigns");
     }
 
+    /**
+     * Update the clinical signs to list in clinical signs box
+     * @param signs list of string clinical sign names
+     */
     setClinicalSigns(signs: string[]) {
         this.clinicalSignsBox.innerHTML = '';
         HTMLPrimitives.span(this.clinicalSignsBox, "Clinical signs", true).classList.add("groupingBoxTitle");
@@ -276,6 +328,9 @@ export class PatientGui {
 
 }
 
+/**
+ * Grouping and ordering of parameters and outputs to display
+ */
 const valueGrouping = [{
     name: 'Pressures',
     valueIds: [
@@ -286,26 +341,27 @@ const valueGrouping = [{
             PARAM.baroreflexSetPoint,
             OUT.rap +1000,
             PARAM.msfp
-    ]
-},
-{
-    name: 'Cardiac properties',
-    valueIds: [
-        PARAM.rate,
-        OUT.strokeVolume +1000,
-        PARAM.maxStrokeVolume,
-        OUT.co +1000,
-        PARAM.systoleLength,
-        PARAM.aorticBackflow,
-        PARAM.dicroticLength
-    ]
-},
-{
-    name: 'Vasculature properties',
-    valueIds: [
-        PARAM.R_p,
-        PARAM.R_a,
-        PARAM.C_a,
-        PARAM.rvr,
-    ]
-}];
+        ]
+    },
+    {
+        name: 'Cardiac properties',
+        valueIds: [
+            PARAM.rate,
+            OUT.strokeVolume +1000,
+            PARAM.maxStrokeVolume,
+            OUT.co +1000,
+            PARAM.systoleLength,
+            PARAM.aorticBackflow,
+            PARAM.dicroticLength
+        ]
+    },
+    {
+        name: 'Vasculature properties',
+        valueIds: [
+            PARAM.R_p,
+            PARAM.R_a,
+            PARAM.C_a,
+            PARAM.rvr,
+        ]
+    }
+];
