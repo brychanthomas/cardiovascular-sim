@@ -202,6 +202,7 @@ export class CirculatorySystem {
         this.vasculature.setR_p(this.parameters.getValue(PARAM.R_p));
         this.vasculature.setR_a(this.parameters.getValue(PARAM.R_a));
         this.vasculature.setC_a(this.parameters.getValue(PARAM.C_a));
+        this.vasculature.setMSFP(this.parameters.getValue(PARAM.msfp));
         this.heart.setParameters(this.parameters);
     }
 

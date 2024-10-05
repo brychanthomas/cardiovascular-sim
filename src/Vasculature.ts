@@ -5,7 +5,7 @@ export class Vasculature {
     private C_a: number; // mL / mmHg
     private R_a: number; // mmHg s / mL
     private R_p: number; // mmHg s / mL
-    private msfp = 7;
+    private msfp: number;
 
     private flowFunc: (t:number)=>number;
 
@@ -19,7 +19,7 @@ export class Vasculature {
         return Q(t)/C*(1+R_a/R_p) + R_a*NumericalMethods.d_dt(Q, t) - p/(R_p*C) + this.msfp/(R_p*C);
     }
 
-    evaluateAorticPressureSequence(flowFunc: (t:number)=>number, timespan, timestep) {
+    evaluateAorticPressureSequence(flowFunc: (t:number)=>number, timespan: number, timestep: number) {
         this.flowFunc = flowFunc;
         let f = this.dp_dt.bind(this);
         let [ts, ps] = NumericalMethods.RungeKutta4(f, timespan, timestep, 80);
@@ -36,6 +36,10 @@ export class Vasculature {
 
     setC_a(val: number) {
         this.C_a = val;
+    }
+
+    setMSFP(val: number) {
+        this.msfp = val;
     }
 
     getR_p() {
