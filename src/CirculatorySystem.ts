@@ -4,14 +4,25 @@ import { PARAM, CirculatoryParameters } from './CirculatoryParameters.js';
 import { OUT, CirculatoryOutputs } from './CirculatoryOutputs.js';
 import { Disease } from './Disease.js'
 
+/**
+ * Object mapping output IDs to numerical values
+ */
 export interface OutputValues {
     [id: number]: number
 }
 
+/**
+ * Object mapping parameter IDs to numerical values
+ */
 export interface ParameterValues {
     [id: number]: number
 }
 
+/**
+ * Represents a human circulatory system with parameters affected by 
+ * exercise, disease and the baroreflex, and output values and timeseries 
+ * based upon these parameters fed into the Windkessel model
+ */
 export class CirculatorySystem {
 
     private heart: Heart = new Heart();
@@ -23,6 +34,10 @@ export class CirculatorySystem {
     private parameters = new CirculatoryParameters();
     private outputs = new CirculatoryOutputs();
 
+    /**
+     * Update parameter values (exercise factors) based upon exercise intensity
+     * @param exerciseFactor exercise intensity from 0 to 1
+     */
     setExerciseFactor(exerciseFactor: number) {
         this.parameters.getParameter(PARAM.R_p).setExerciseFactor(1 - 0.81*exerciseFactor); // TPR drops to 25% = 0.19(vasodilation)*1.33(splanchnic vasoconstriction)
         this.parameters.getParameter(PARAM.R_p).setExerciseFactorExplanation("exercise: vasodilation of arteries supplying exercising muscles (functional hyperaemia)");
@@ -33,11 +48,19 @@ export class CirculatorySystem {
         this.applyParameters();
     }
 
+    /**
+     * Update parameter values (disease factors) based upon a list of diseases
+     * @param ds list of Disease objects
+     */
     applyDiseases(ds: Disease[]) {
         this.parameters.applyDiseases(ds);
         this.applyParameters();
     }
 
+    /**
+     * Evaluate steady state timeseries of pressure in the aorta over a single 
+     * beat based upon current parameter values
+     */
     evaluatePressures() {
         let timespan = 10;
         let h = (60/this.heart.getRate())/100;
@@ -53,6 +76,11 @@ export class CirculatorySystem {
         }
     }
 
+    /**
+     * Carry out baroreflex responses, adjusting values of parameters (baroreflex 
+     * factors) to match mean arterial pressure with baroreflex set point (if 
+     * possible)
+     */
     baroreflex() {
         this.evaluatePressures();
         var map = this.getMAP();
@@ -94,11 +122,22 @@ export class CirculatorySystem {
         this.updateOutputs();
     }
 
+    /**
+     * Get steady state timeseries of pressure in the aorta over a single 
+     * beat after it has been calculated by evaluatePressures or baroreflex
+     * @returns object with 't' property for timepoints and 'p' property for corresponding pressure
+     */
     getAorticPressureTimeseries() {
         return {t:this.aortatimeseq, p:this.aortapressureseq};
     }
 
+    /**
+     * Get timeseries of flow through the aortic valve over a single beat based
+     * upon current parameter values
+     * @returns object with 't' property for timepoints and 'f' property for corresponding flow
+     */
     getAorticValveFlowTimeseries() {
+        this.applyParameters();
         let timeseq = [];
         let flowseq = [];
         let T = 60/this.heart.getRate()
@@ -108,29 +147,57 @@ export class CirculatorySystem {
         }
         return {t:timeseq, f:flowseq};
     }
-
+    
+    /**
+     * Get pressure string (systolic/diastolic) from aortic pressures calculated by 
+     * evaluatePressures or baroreflex (where pressure are rounded to integers)
+     * @returns pressure string (systolic/diastolic)
+     */
     getPressureString() {
         let diastolic = Math.round(Math.min(...this.aortapressureseq));
         let systolic = Math.round(Math.max(...this.aortapressureseq));
         return systolic+'/'+diastolic;
     }
 
+    /**
+     * Get diastolic (minimum) aortic pressure after pressure timeseries calculated by 
+     * evaluatePressures or baroreflex
+     * @returns unrounded diastolic pressure
+     */
     getDiastolicPressure() {
         return Math.min(...this.aortapressureseq);
     }
 
+    /**
+     * Get systolic (maximum) aortic pressure after pressure timeseries calculated by 
+     * evaluatePressures or baroreflex
+     * @returns unrounded systolic pressure
+     */
     getSystolicPressure() {
         return Math.max(...this.aortapressureseq);
     }
 
+    /**
+     * Get mean arterial pressure after pressure timeseries calculated by 
+     * evaluatePressures or baroreflex
+     * @returns unrounded MAP
+     */
     getMAP() {
         return this.aortapressureseq.reduce((a, b) => a + b) / this.aortapressureseq.length;
     }
 
+    /**
+     * Get pulse pressure (systolic - diastolic) after pressure timeseries calculated by 
+     * evaluatePressures or baroreflex
+     * @returns unrounded pulse pressure
+     */
     getPP() {
         return Math.max(...this.aortapressureseq) - Math.min(...this.aortapressureseq);
     }
 
+    /**
+     * Apply currently stored parameter values to Heart and Vasculature objects
+     */
     private applyParameters() {
         this.vasculature.setR_p(this.parameters.getValue(PARAM.R_p));
         this.vasculature.setR_a(this.parameters.getValue(PARAM.R_a));
@@ -138,11 +205,19 @@ export class CirculatorySystem {
         this.heart.setParameters(this.parameters);
     }
 
+    /**
+     * Get ParameterSummary objects for all parameters
+     * @returns object mapping parameter ID to ParameterSummary for all parameters
+     */
     getParameterSummaries() {
         return this.parameters.getAllParameterSummaries();
     }
 
-    updateOutputs() {
+    /**
+     * Update Output objects based upon pressure timeseries calculated by
+     * evaluatePressures or baroreflex
+     */
+    private updateOutputs() {
         this.outputs.setValue(OUT.co, this.heart.getCardiacOutput());
         this.outputs.setValue(OUT.map, this.getMAP());
         this.outputs.setValue(OUT.diastolicPressure, this.getDiastolicPressure());
@@ -152,11 +227,19 @@ export class CirculatorySystem {
         this.outputs.setValue(OUT.pp, this.getPP());
     }
 
+    /**
+     * Get OutputSummary objects for all outputs
+     * @returns object mapping output ID to OutputSummary for all parameters
+     */
     getOutputSummaries() {
         this.updateOutputs();
         return this.outputs.getAllOutputSummaries();
     }
 
+    /**
+     * Get raw value for all outputs
+     * @returns object mapping output ID to raw numerical value for all outputs
+     */
     getOutputValues(): OutputValues {
         this.updateOutputs();
         var values: {[id: number]: number} = {};
@@ -167,6 +250,10 @@ export class CirculatorySystem {
         return values;
     }
 
+    /**
+     * Get raw value for all parameters
+     * @returns object mapping parameter ID to raw numerical value for all parameters
+     */
     getParameterValues(): ParameterValues {
         var values: {[id: number]: number} = {};
         var id: any;
