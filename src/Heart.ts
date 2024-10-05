@@ -1,5 +1,9 @@
 import { CirculatoryParameters, PARAM } from "./CirculatoryParameters.js";
 
+/**
+ * Represents a human heart - calculates aortic valve flow timeseries and 
+ * CO, RAP and SV based on parameters
+ */
 export class Heart {
 
     private rate: number; // bpm
@@ -12,6 +16,11 @@ export class Heart {
 
     constructor() {}
 
+    /**
+     * Get flow through aortic valve at certain timestep
+     * @param t time in seconds
+     * @returns flow through aortic valve (mL/s)
+     */
     getFlow(t: number): number {
         let T = 60/this.rate;
         let peak_flow = (this.strokeVolume) * Math.PI/(2*this.systoleLength);
@@ -25,14 +34,26 @@ export class Heart {
         }
     }
 
+    /**
+     * Get current heart rate (parameter)
+     * @returns heart rate (BPM)
+     */
     getRate(): number {
         return this.rate;
     }
 
+    /**
+     * Get current stroke volume (output - calculated from parameters)
+     * @returns stroke volume (mL)
+     */
     getStrokeVolume(): number {
         return this.strokeVolume;
     }
 
+    /**
+     * Get current cardiac output (output - calculated from parameters and SV)
+     * @returns cardiac output (L/min)
+     */
     getCardiacOutput(): number {
         //let f = this.getFlow.bind(this);
         //let T = 60 / this.getRate();
@@ -41,6 +62,11 @@ export class Heart {
         return (sv*this.getRate() + this.aorticBackflow*60) / 1000;
     }
 
+    /**
+     * Set parameters relevant for heart (MSFP, RVR, rate, maxStrokeVolume,
+     * dicroticLength, systoleLength, aorticBackflow)
+     * @param params CirculatoryParameters object
+     */
     setParameters(params: CirculatoryParameters) {
         this.strokeVolume = (params.getValue(PARAM.msfp) / params.getValue(PARAM.rvr)) / params.getValue(PARAM.rate);
         if (this.strokeVolume > params.getValue(PARAM.maxStrokeVolume)) {
@@ -54,6 +80,10 @@ export class Heart {
         this.aorticBackflow = params.getValue(PARAM.aorticBackflow);
     }
 
+    /**
+     * Get right atrial pressure (output - calculated from parameters)
+     * @returns RAP (mmHg)
+     */
     getRAP() {
         return this.rap;
     }
