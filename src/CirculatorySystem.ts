@@ -107,7 +107,11 @@ export class CirculatorySystem {
             p.getParameter(PARAM.rate).setBaroreflexFactor(1);
             let maxRateFactor = maxHeartRate/p.getParameter(PARAM.rate).getValue();
             p.getParameter(PARAM.rate).setBaroreflexFactor(1 + (maxRateFactor-1)*reflex_coeff);
-            p.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
+            if (1 + (maxRateFactor-1)*reflex_coeff >= 1) {
+                p.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: increased sympathetic and decreased vagal tone from the cardiovascular centre");
+            } else {
+                p.getParameter(PARAM.rate).setBaroreflexFactorExplanation("baroreflex: decreased sympathetic and increased vagal tone from the cardiovascular centre");
+            }
             this.applyParameters();
             this.evaluatePressures();
             map = this.getMAP();
