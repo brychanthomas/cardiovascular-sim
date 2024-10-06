@@ -10,8 +10,8 @@ export class Graph {
     private height: number;
     private timespan: number;
     private timespanOptions = [1,3,5,10];
-    private minval: number;
-    private maxval: number;
+    private minval: number = null;
+    private maxval: number = null;
     private ts: number[];
     private vs: number[];
     private storets: number[] = [];
@@ -188,6 +188,11 @@ export class Graph {
             this.drawTicksAndLabels();
         } else if (v<this.minval || this.minval === null) {
             this.minval = Math.floor(v/10)*10;
+            this.drawTicksAndLabels();
+        }
+        //if only 0s present, maxval should be set to 10
+        if (this.maxval == 0 && this.vs.length > 10 && this.vs.every((x)=>x==0)) {
+            this.maxval = 10;
             this.drawTicksAndLabels();
         }
         while (this.ts[0] < t-Math.max(...this.timespanOptions)) {
