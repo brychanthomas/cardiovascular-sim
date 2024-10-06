@@ -95,17 +95,16 @@ export class PatientGui {
      * @param parent parent to create elements inside
      */
     private initValueLabels(parent: HTMLElement) {
-        //parameter has its normal ID, output has +1000
         for (var group of valueGrouping) {
             var box = HTMLPrimitives.groupBox(parent, group.name);
             var isFirstInBox = true;
             for (var id of group.valueIds) {
                 this.valueLabels[id] = HTMLPrimitives.span(box, "", isFirstInBox);
-                if (id < 1000) { 
+                if (id < 1000) { //parameter
                     this.valueLabels[id].style.color = "cyan";
                     this.hoverBoxes[id] = HTMLPrimitives.hoverBox(box, this.valueLabels[id], '#dce0f4');
                  }
-                else { 
+                else { //output
                     this.valueLabels[id].style.color = "yellow";
                     this.hoverBoxes[id] = HTMLPrimitives.hoverBox(box, this.valueLabels[id], '#f5f5dc');
                  }
@@ -128,9 +127,9 @@ export class PatientGui {
                 this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
                 this.hoverBoxes[id].innerHTML = this.parameterSummaryToText(summary);
             } else { //output
-                let summary = outputs[id-1000];
+                let summary = outputs[id];
                 this.valueLabels[id].innerHTML = summary.name + ' = ' + summary.value;
-                if (id === OUT.rap+1000 && summary.value === '0.00 mmHg') { this.valueLabels[id].innerHTML = 'RAP ≈ 0 mmHg' }
+                if (id === OUT.rap && summary.value === '0.00 mmHg') { this.valueLabels[id].innerHTML = 'RAP ≈ 0 mmHg' }
                 this.hoverBoxes[id].innerHTML = `<span><b>${summary.description}</b> (output)</span>`;
             }
             
@@ -334,12 +333,12 @@ export class PatientGui {
 const valueGrouping = [{
     name: 'Pressures',
     valueIds: [
-            OUT.systolicPressure +1000,
-            OUT.diastolicPressure +1000,
-            OUT.pp +1000,
-            OUT.map +1000,
+            OUT.systolicPressure,
+            OUT.diastolicPressure,
+            OUT.pp,
+            OUT.map,
             PARAM.baroreflexSetPoint,
-            OUT.rap +1000,
+            OUT.rap,
             PARAM.msfp
         ]
     },
@@ -347,9 +346,9 @@ const valueGrouping = [{
         name: 'Cardiac properties',
         valueIds: [
             PARAM.rate,
-            OUT.strokeVolume +1000,
+            OUT.strokeVolume,
             PARAM.maxStrokeVolume,
-            OUT.co +1000,
+            OUT.co,
             PARAM.systoleLength,
             PARAM.aorticBackflow,
             PARAM.dicroticLength

@@ -1,14 +1,16 @@
 import { Output, OutputSummary } from './Output.js';
 
-/** Mapping of readable output name to numerical ID (like an enum) */
+/** Mapping of readable output name to numerical ID (like an enum).
+ * IDs start at 1000 to avoid confusion with parameter IDs
+ */
 export const OUT = {
-    strokeVolume: 0,
-    rap: 1,
-    diastolicPressure: 2,
-    systolicPressure: 3,
-    map: 4,
-    co: 5,
-    pp: 6
+    strokeVolume: 1000,
+    rap: 1001,
+    diastolicPressure: 1002,
+    systolicPressure: 1003,
+    map: 1004,
+    co: 1005,
+    pp: 1006
 }
 
 /** Mapping of output ID to unit */
@@ -91,7 +93,7 @@ export class CirculatoryOutputs {
     getAllOutputSummaries() {
         var summaries: { [id: number]: OutputSummary } = {};
         var outId: any;
-        for (outId in Object.values(OUT)) {
+        for (outId of Object.values(OUT)) {
             summaries[outId] = this.getSummary(outId);
         }
         return summaries;
