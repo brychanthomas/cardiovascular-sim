@@ -116,9 +116,9 @@ export class Graph {
     drawTicksAndLabels() {
         this.context.clearRect(this.basex-50, this.basey-15, 50, this.height+30);
         this.context.clearRect(this.basex-20, this.basey+this.height, this.width+35, 30);
-        this.drawYLabel();
         this.drawYTicks();
         this.drawXTicks();
+        this.drawYLabel();
     }
 
     /**
