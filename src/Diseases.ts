@@ -1,4 +1,4 @@
-import { Disease, Atherosclerosis, AorticRegurguitation, Hypovolaemia, Hypervolaemia, HeartFailure, Bradycardia, Tachycardia } from './Disease.js';
+import { Disease, Atherosclerosis, AorticRegurgitation, Hypovolaemia, Hypervolaemia, HeartFailure, Bradycardia, Tachycardia } from './Disease.js';
 
 export class DiseaseStore {
 
@@ -6,7 +6,7 @@ export class DiseaseStore {
     
     static {
         let ds: Disease[] = [
-            new Atherosclerosis(), new AorticRegurguitation(),
+            new Atherosclerosis(), new AorticRegurgitation(),
             new Hypovolaemia(), new Hypervolaemia(),
             new HeartFailure(), new Bradycardia(),
             new Tachycardia()
